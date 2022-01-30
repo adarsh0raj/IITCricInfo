@@ -34,11 +34,22 @@ app.get('/players/:id', async(req, res) => {
         const fifties = await pool.query("select count(*) from (select match_id, sum(runs_scored) from ball_by_ball where striker = $1 group by match_id) as t where t.sum >= 50", [parseInt(req.params.id)]);
         const highest = await pool.query("select max(runs) from (select match_id, sum(runs_scored) as runs from ball_by_ball where striker = $1 group by match_id) as t", [parseInt(req.params.id)]);
 
-        // todo strike rate
-
-        // todo avg
+        const strike_rate = await pool.query('SELECT COALESCE(((SUM(runs_scored) * 1.0 / COUNT(*)) * 100.0), 0.0) AS strike_rate FROM ball_by_ball WHERE striker = $1', [parseInt(req.params.id)]);
+        const batting_avg = await pool.query('SELECT COALESCE((SUM(runs_scored) * 1.0 / COALESCE(Nullif((SELECT COUNT(*) FROM ball_by_ball WHERE striker = $1 AND out_type IS NOT NULL), 0), 1.0)), 0.0) AS batting_avg FROM ball_by_ball WHERE striker = $1', [parseInt(req.params.id)]);
 
         // todo bowling section
+        const matches_bowled = await pool.query('SELECT COUNT(DISTINCT match_id) AS matches_bowled FROM ball_by_ball WHERE bowler = $1', [parseInt(req.params.id)]);
+        const balls_bowled = await pool.query('SELECT COUNT(*) as balls_bowled FROM ball_by_ball WHERE bowler = $1', [parseInt(req.params.id)]);
+        const runs_conceded = await pool.query('SELECT SUM(runs_scored+extra_runs) AS runs_conceded FROM ball_by_ball WHERE bowler = $1', [parseInt(req.params.id)]);
+        const overs_bowled = await pool.query('SELECT COUNT(*) AS overs_bowled FROM (SELECT DISTINCT match_id, innings_no, over_id FROM ball_by_ball WHERE bowler = $1) as table1', [parseInt(req.params.id)]);
+        const wickets_taken = await pool.query("SELECT COUNT(*) AS wickets_taken FROM ball_by_ball WHERE bowler = $1 AND out_type IS NOT NULL AND out_type NOT IN ('run out', 'retired hurt')", [parseInt(req.params.id)]);
+        var economy = 0.0;
+        const five_wicket_hauls = await pool.query("SELECT COUNT(*) as five_wicket_hauls FROM (SELECT COUNT(*) AS wkts, match_id FROM ball_by_ball WHERE bowler = $1 AND out_type IS NOT NULL AND out_type NOT IN ('run out', 'retired hurt') GROUP BY match_id) table1 WHERE wkts >= 5", [parseInt(req.params.id)]);
+
+        if(overs_bowled.rows[0].overs_bowled != 0)
+        {
+            economy = parseFloat(runs_conceded.rows[0].runs_conceded) / parseFloat(overs_bowled.rows[0].overs_bowled);
+        }
 
         if (runs.rows[0].sum === null) {
             runs.rows[0].sum = 0;
@@ -60,7 +71,16 @@ app.get('/players/:id', async(req, res) => {
             sixes: sixes.rows[0].count,
             fifties: fifties.rows[0].count,
             highest: highest.rows[0].max,
+            strike_rate: strike_rate.rows[0].strike_rate,
+            batting_avg: batting_avg.rows[0].batting_avg,
 
+            matches_bowled: matches_bowled.rows[0].matches_bowled,
+            balls_bowled: balls_bowled.rows[0].balls_bowled,
+            runs_conceded: runs_conceded.rows[0].runs_conceded,
+            overs_bowled: overs_bowled.rows[0].overs_bowled,
+            wickets_taken: wickets_taken.rows[0].wickets_taken,
+            economy: economy,
+            five_wicket_hauls: five_wicket_hauls.rows[0].five_wicket_hauls
         });
 
     } catch (err) {
