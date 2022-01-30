@@ -26,6 +26,7 @@ app.get('/players', async(req, res) => {
 app.get('/players/:id', async(req, res) => {
     try {
         const player = await pool.query('SELECT * FROM player WHERE player_id = $1', [parseInt(req.params.id)]);
+        const runs_match = await pool.query("SELECT match_id, sum(runs_scored) as runs FROM ball_by_ball WHERE striker = $1 group by match_id", [parseInt(req.params.id)]);
         const matches = await pool.query("select count(*) from player_match where player_id = $1", [parseInt(req.params.id)]);
         const runs = await pool.query("select sum(runs_scored) from ball_by_ball where striker = $1", [parseInt(req.params.id)]);
         const fours = await pool.query("select count(*) from ball_by_ball where striker = $1 and runs_scored = 4", [parseInt(req.params.id)]);
@@ -52,7 +53,8 @@ app.get('/players/:id', async(req, res) => {
             country_name: player.rows[0].country_name,
             batting_skill: player.rows[0].batting_hand,
             bowling_skill: player.rows[0].bowling_skill,
-            matches: matches.rows[0].count,
+            matches: runs_match.rows,
+            no_matches: matches.rows[0].count,
             runs: runs.rows[0].sum,
             fours: fours.rows[0].count,
             sixes: sixes.rows[0].count,
