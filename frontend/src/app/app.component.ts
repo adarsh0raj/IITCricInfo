@@ -7,21 +7,12 @@ import { AppServiceService } from './app-service.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'frontend';
+  title = 'IITCricInfo';
 
-  constructor(private appService: AppServiceService) {
+  constructor() {
   }
 
   ngOnInit(){
-    this.getDataFromApi();
-  }
-
-  getDataFromApi(){
-    this.appService.getData().subscribe((data) => {
-       console.log('Response from Api is:', data);
-    }, (error) => {
-      console.log('Error from Api is:', error);
-    })
   }
 
 }
