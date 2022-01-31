@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgChartsModule } from 'ng2-charts';
 
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -26,7 +27,8 @@ import { VenuedetailComponent } from './venuedetail/venuedetail.component';
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

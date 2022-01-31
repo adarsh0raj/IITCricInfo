@@ -22,3 +22,19 @@
     </p> 
 
 </div>
+
+<br>
+<br>
+
+<div class="start container">
+    <h2>Pie Chart</h2>
+    <div class="chart">
+      <canvas style="width: 500px; height: 500px;"
+                baseChart
+              [data]="pieChartData"
+              [type]="pieChartType"
+              [options]="pieChartOptions"
+              [plugins]="pieChartPlugins">
+      </canvas>
+    </div>
+</div>
