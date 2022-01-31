@@ -1,31 +1,111 @@
-nav {
-    width: 100%;
-    margin: 20px 0;
+.nav__btns {
+    display: flex;
+    align-items: center;
 }
 
-nav ul{
-    width: 100%;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+.nav {
+    margin-left: 15%;
+    margin-right: 15%;
+    max-width: 968px;
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-nav ul li{
-    width: 20%;
-    float: left;
+.nav__logo,
+.nav__toggle {
+    color: rgb(115, 61, 214);
+    font-weight: var(--font-large);
+    font-size: var(--h1-font-size);
 }
 
-nav ul li a{
-    text-decoration: none;
-    color: rgb(0, 0, 0);
+.nav__logo:hover {
+    color: var(--first-color);
+}
+
+.nav__toggle {
+    font-size:  1.1rem;
+    cursor: pointer;
+}
+
+.nav__toggle:hover {
+    color: var(--first-color);
+}
+
+.nav__list {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+}
+
+.nav__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: var(--small-font-size);
+    color: var(--title-color);
+    font-weight: var(--font-medium);
+}
+
+.nav__link:hover {
+    color: var(--first-color);
+}
+
+.nav__icon {
+    font-size: 1.2rem;  
+}
+
+.nav__close {
+    position: absolute;
+    right: 1.3rem;
+    bottom: .5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--first-color);
+}
+
+.nav__close:hover {
+    color: var(--first-color-alt);
+}
+
+/* show menu */
+.show-menu {
+    bottom: 0;
+}
+
+/* Active link */
+.active-link {
+    color: var(--first-color);
+}
+
+/* Change background header */
+.scroll-header {
+    box-shadow: 0 -1px 4px rgba(0,0,0,.15);
+}
+
+.about__container {
+    margin-top: 1rem;
+}
+
+.about__img {
+    width: 200px;
+    border-radius: .5rem; 
+    justify-self: center;
+    align-self: center;
+}
+
+.about__data{
+    border: 2px solid black;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    padding: 8px 0;
-    display: block;
-    width: 100%;
-    background-color: rgb(230, 215, 173);
 }
 
-nav ul li a:hover {
-    background-color: rgb(252, 234, 184);
+.about__description {
+    border: 1px solid black;
+    justify-self: center;
+    align-self: center;
+    max-width: 500px;
+    text-align: center;
+    margin-bottom: var(--mb-2-5);
 }

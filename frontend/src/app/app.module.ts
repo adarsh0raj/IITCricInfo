@@ -6,12 +6,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { VenueComponent } from './venue/venue.component';
 import { HomeComponent } from './home/home.component';
+import { MatchComponent } from './match/match.component';
+import { PlayerComponent } from './player/player.component';
+import { PointsComponent } from './points/points.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     VenueComponent,
-    HomeComponent
+    HomeComponent,
+    MatchComponent,
+    PlayerComponent,
+    PointsComponent
   ],
   imports: [
     BrowserModule,
