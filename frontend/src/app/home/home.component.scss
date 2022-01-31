@@ -82,30 +82,3 @@
 .scroll-header {
     box-shadow: 0 -1px 4px rgba(0,0,0,.15);
 }
-
-.about__container {
-    margin-top: 1rem;
-}
-
-.about__img {
-    width: 200px;
-    border-radius: .5rem; 
-    justify-self: center;
-    align-self: center;
-}
-
-.about__data{
-    border: 2px solid black;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.about__description {
-    border: 1px solid black;
-    justify-self: center;
-    align-self: center;
-    max-width: 500px;
-    text-align: center;
-    margin-bottom: var(--mb-2-5);
-}
