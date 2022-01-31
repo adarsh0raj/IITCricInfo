@@ -1,0 +1,24 @@
+<div class="start container">
+    <h2>Venue Details</h2>
+    <br>
+    <br>
+    <ul>
+        <li>Venue Name: {{venueDetails.venue_name}}</li>
+        <li>Address: {{venueDetails.address}}</li>
+        <li>Capacity: {{venueDetails.capacity}}</li>
+        <li>Matches Played: {{venueDetails.matches}}</li>
+        <li>Highest Score Recorded: {{venueDetails.highest_rec}}</li>
+        <li>Lowest Score Recorded: {{venueDetails.lowest_rec}}</li>
+        <li>Matches won (Bat): {{venueDetails.matches_won_bat}} percent</li>
+        <li>Matches won (Bowl): {{venueDetails.matches_won_bowl}} percent</li>
+        <li>Matches draw: {{venueDetails.matches_draw}} percent</li>
+    </ul>
+
+    <br>
+    <br>
+
+    <p>
+        <a class='btn btn-default' (click)="goBack()">Back </a>
+    </p> 
+
+</div>

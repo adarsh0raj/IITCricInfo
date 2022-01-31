@@ -7,6 +7,7 @@ import { MatchComponent } from './match/match.component';
 import { PlayerComponent } from './player/player.component';
 import { PointsComponent } from './points/points.component';
 import { VenueComponent } from './venue/venue.component';
+import { VenuedetailComponent } from './venuedetail/venuedetail.component';
 
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'players', component: PlayerComponent },
   { path: 'pointstable', component: PointsComponent },
   { path: 'venues', component: VenueComponent },
+  { path: 'venues/:id', component: VenuedetailComponent },
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   { path: '**', component: AboutComponent }
 ];

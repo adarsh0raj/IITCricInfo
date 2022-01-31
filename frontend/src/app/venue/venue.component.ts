@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { venue, venue_details } from '../interfaces/venue';
 
 @Component({
   selector: 'app-venue',
@@ -7,9 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VenueComponent implements OnInit {
 
-  constructor() { }
+  venues: venue[] = [];
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
+    this.getVenues();
+  }
+
+  getVenues() {
+    this.http.get<venue[]>('http://localhost:3000/venues')
+      .subscribe(data => {
+        console.log(data);
+        this.venues = data;
+      });
   }
 
 }
