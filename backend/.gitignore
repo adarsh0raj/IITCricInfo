@@ -11,3 +11,7 @@ yarn-error.log
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+
+#database
+./db.js
+db.js

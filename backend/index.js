@@ -181,8 +181,6 @@ app.get('/venues/:id', async(req, res) => {
     }
 });
 
-
-
 app.listen(3000, (req, res) => {
     console.log('Node Server is running on port 3000');
 });
