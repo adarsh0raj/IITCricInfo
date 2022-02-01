@@ -97,6 +97,49 @@ app.get('/players/:id', async(req, res) => {
     }
 });
 
+app.get('/pointstable/:year', async(req, res) => {
+    try {
+        const pointstable = await pool.query("WITH teams(team_id) AS \
+        (SELECT DISTINCT team1 as team_id FROM match WHERE season_year = $1 \
+         UNION \
+         SELECT DISTINCT team2 as team_id FROM match WHERE season_year = $1), \
+         teams_played(team_id, played) AS \
+         (SELECT team_id, COUNT(*) FROM teams, match \
+          WHERE season_year = $1 AND (team_id=team1 OR team_id=team2) \
+         GROUP BY team_id), \
+         teams_won(team_id, won) AS \
+         (SELECT team_id, COUNT(*) FROM teams, match \
+         WHERE season_year = $1 AND match_winner=team_id \
+         GROUP BY team_id), \
+         teams_points(team_id, played, won, lost, tied, points) AS \
+         (SELECT team_id, played, won, (played-won) AS lost, 0 AS tied, (won*2) AS points \
+          FROM (teams_played natural join teams_won)), \
+         ball_team(match_id, innings_no, over_id, ball_id, runs, striker, team_id) AS \
+          (SELECT match.match_id, innings_no, over_id, ball_id, (runs_scored + extra_runs), striker, team_id \
+          FROM ball_by_ball, match, player_match WHERE match.match_id=ball_by_ball.match_id AND  \
+           match.match_id=player_match.match_id AND match.season_year=$1 AND player_match.player_id=striker), \
+         runs_innings(match_id, innings_no, runs, team_id) AS \
+         (SELECT match_id, innings_no, SUM(runs), team_id FROM ball_team \
+         GROUP BY match_id, innings_no, team_id), \
+         overs_innings(match_id, innings_no, overs, team_id) AS \
+         (SELECT match_id, innings_no, COUNT(DISTINCT over_id), team_id FROM ball_team \
+         GROUP BY match_id, innings_no, team_id), \
+         rr_innings(team_id, match_id, rr) AS \
+         (SELECT team_id, match_id, ((runs*1.0) / (overs * 1.0)) FROM runs_innings natural join overs_innings), \
+         teams_nrr(team_id, nrr) AS \
+         (SELECT A.team_id, SUM(A.rr - B.rr) FROM rr_innings A, rr_innings B \
+         WHERE A.match_id = B.match_id AND A.team_id <> B.team_id \
+         GROUP BY A.team_id) \
+         SELECT team_name, played, won, lost, tied, nrr, points FROM teams_points, teams_nrr, team \
+         WHERE teams_points.team_id = teams_nrr.team_id AND teams_nrr.team_id = team.team_id \
+         ORDER BY points DESC, nrr DESC", [parseInt(req.params.year)]);
+
+        res.json(pointstable.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
 app.get('/venues', async(req, res) => {
     try {
         const venues = await pool.query('SELECT * FROM venue');
