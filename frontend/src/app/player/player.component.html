@@ -1,3 +1,32 @@
-<div class="start">
-    <p>player works!</p>
+<div class="player-div start container">
+    <h1> Player Basic Information</h1>
+    <ol type="a">
+        <li><b>Player's Name: </b>{{playerDetails.player_name}}</li>
+        <li><b>Country: </b>{{playerDetails.country_name}}</li>
+        <li><b>Batting Skill: </b>{{playerDetails.batting_skill}}</li>
+        <li><b>Bowling Skill: </b>{{playerDetails.bowling_skill}}</li>
+    </ol>
+
+    <h2> Player Batting Statistics</h2>
+    <ol type="a">
+        <li><b>Matches: </b>{{playerDetails.matches_bat}}</li>
+        <li><b>Runs: </b>{{playerDetails.runs_bat}}</li>
+        <li><b>Fours: </b>{{playerDetails.fours}}</li>
+        <li><b>Sixes: </b>{{playerDetails.sixes}}</li>
+        <li><b>Fifties: </b>{{playerDetails.fifties}}</li>
+        <li><b>Highest Score: </b>{{playerDetails.highest}}</li>
+        <li><b>Strike Rate: </b>{{playerDetails.strike_rate}}</li>
+        <li><b>Average: </b>{{playerDetails.batting_avg}}</li>
+    </ol>
+
+    <h2> Player Bowling Statistics</h2>
+    <ol type="a">
+        <li><b>Matches: </b>{{playerDetails.matches_bowled}}</li>
+        <li><b>Runs: </b>{{playerDetails.runs_conceded}}</li>
+        <li><b>Balls: </b>{{playerDetails.balls_bowled}}</li>
+        <li><b>Overs: </b>{{playerDetails.overs_bowled}}</li>
+        <li><b>Wickets: </b>{{playerDetails.wickets_taken}}</li>
+        <li><b>Economy: </b>{{playerDetails.economy}}</li>
+        <li><b>Five Wickets Haul: </b>{{playerDetails.five_wicket_hauls}}</li>
+    </ol>
 </div>

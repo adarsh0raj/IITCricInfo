@@ -13,7 +13,7 @@ import { VenuedetailComponent } from './venuedetail/venuedetail.component';
 const routes: Routes = [
   { path: 'home', component: AboutComponent },
   { path: 'matches', component: MatchComponent },
-  { path: 'players', component: PlayerComponent },
+  { path: 'players/:id', component: PlayerComponent },
   { path: 'pointstable', component: PointsComponent },
   { path: 'venues', component: VenueComponent },
   { path: 'venues/:id', component: VenuedetailComponent },

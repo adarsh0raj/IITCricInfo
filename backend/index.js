@@ -34,27 +34,34 @@ app.get('/players', async(req, res) => {
 
 app.get('/players/:id', async(req, res) => {
     try {
+        // Basic Information
         const player = await pool.query('SELECT * FROM player WHERE player_id = $1', [parseInt(req.params.id)]);
-        const runs_match = await pool.query("SELECT match_id, sum(runs_scored) as runs FROM ball_by_ball WHERE striker = $1 group by match_id", [parseInt(req.params.id)]);
+        
+        // Batting Stats
         const matches = await pool.query("select count(*) from player_match where player_id = $1", [parseInt(req.params.id)]);
         const runs = await pool.query("select sum(runs_scored) from ball_by_ball where striker = $1", [parseInt(req.params.id)]);
         const fours = await pool.query("select count(*) from ball_by_ball where striker = $1 and runs_scored = 4", [parseInt(req.params.id)]);
         const sixes = await pool.query("select count(*) from ball_by_ball where striker = $1 and runs_scored = 6", [parseInt(req.params.id)]);
-        const fifties = await pool.query("select count(*) from (select match_id, sum(runs_scored) from ball_by_ball where striker = $1 group by match_id) as t where t.sum >= 50", [parseInt(req.params.id)]);
+        const fifties = await pool.query("select count(*) from (select match_id, sum(runs_scored) from ball_by_ball where striker = $1 group by match_id) as t where t.sum >= 50 and t.sum < 100", [parseInt(req.params.id)]);
         const highest = await pool.query("select max(runs) from (select match_id, sum(runs_scored) as runs from ball_by_ball where striker = $1 group by match_id) as t", [parseInt(req.params.id)]);
-
         const strike_rate = await pool.query('SELECT COALESCE(((SUM(runs_scored) * 1.0 / COUNT(*)) * 100.0), 0.0) AS strike_rate FROM ball_by_ball WHERE striker = $1', [parseInt(req.params.id)]);
         const batting_avg = await pool.query('SELECT COALESCE((SUM(runs_scored) * 1.0 / COALESCE(Nullif((SELECT COUNT(*) FROM ball_by_ball WHERE striker = $1 AND out_type IS NOT NULL), 0), 1.0)), 0.0) AS batting_avg FROM ball_by_ball WHERE striker = $1', [parseInt(req.params.id)]);
 
-        // todo bowling section
+        // Runs Scored along with match id
+        const runs_match = await pool.query("SELECT match_id, sum(runs_scored) as runs FROM ball_by_ball WHERE striker = $1 group by match_id", [parseInt(req.params.id)]);
+        
+        // Bowling Stats
         const matches_bowled = await pool.query('SELECT COUNT(DISTINCT match_id) AS matches_bowled FROM ball_by_ball WHERE bowler = $1', [parseInt(req.params.id)]);
         const balls_bowled = await pool.query('SELECT COUNT(*) as balls_bowled FROM ball_by_ball WHERE bowler = $1', [parseInt(req.params.id)]);
-        const runs_conceded = await pool.query('SELECT SUM(runs_scored+extra_runs) AS runs_conceded FROM ball_by_ball WHERE bowler = $1', [parseInt(req.params.id)]);
+        const runs_conceded = await pool.query('SELECT SUM(runs_scored) AS runs_conceded FROM ball_by_ball WHERE bowler = $1', [parseInt(req.params.id)]);
         const overs_bowled = await pool.query('SELECT COUNT(*) AS overs_bowled FROM (SELECT DISTINCT match_id, innings_no, over_id FROM ball_by_ball WHERE bowler = $1) as table1', [parseInt(req.params.id)]);
         const wickets_taken = await pool.query("SELECT COUNT(*) AS wickets_taken FROM ball_by_ball WHERE bowler = $1 AND out_type IS NOT NULL AND out_type NOT IN ('run out', 'retired hurt')", [parseInt(req.params.id)]);
         var economy = 0.0;
         const five_wicket_hauls = await pool.query("SELECT COUNT(*) as five_wicket_hauls FROM (SELECT COUNT(*) AS wkts, match_id FROM ball_by_ball WHERE bowler = $1 AND out_type IS NOT NULL AND out_type NOT IN ('run out', 'retired hurt') GROUP BY match_id) table1 WHERE wkts >= 5", [parseInt(req.params.id)]);
 
+        // runs conceded and wickets taken per match
+        const runs_wickets_match = await pool.query("select match_id, sum(runs_scored) as runs_conceded, count(out_type) as wickets from ball_by_ball where bowler = $1 group by match_id", [parseInt(req.params.id)]);
+        
         if(overs_bowled.rows[0].overs_bowled != 0)
         {
             economy = parseFloat(runs_conceded.rows[0].runs_conceded) / parseFloat(overs_bowled.rows[0].overs_bowled);
@@ -64,7 +71,7 @@ app.get('/players/:id', async(req, res) => {
             runs.rows[0].sum = 0;
         }
         if (highest.rows[0].max === null) {
-            highest.rows[0].sum = 0;
+            highest.rows[0].max = 0;
         }
     
         res.json({
@@ -73,9 +80,10 @@ app.get('/players/:id', async(req, res) => {
             country_name: player.rows[0].country_name,
             batting_skill: player.rows[0].batting_hand,
             bowling_skill: player.rows[0].bowling_skill,
-            matches: runs_match.rows,
-            no_matches: matches.rows[0].count,
-            runs: runs.rows[0].sum,
+
+            runs_match: runs_match.rows,
+            matches_bat: matches.rows[0].count,
+            runs_bat: runs.rows[0].sum,
             fours: fours.rows[0].count,
             sixes: sixes.rows[0].count,
             fifties: fifties.rows[0].count,
@@ -89,7 +97,9 @@ app.get('/players/:id', async(req, res) => {
             overs_bowled: overs_bowled.rows[0].overs_bowled,
             wickets_taken: wickets_taken.rows[0].wickets_taken,
             economy: economy,
-            five_wicket_hauls: five_wicket_hauls.rows[0].five_wicket_hauls
+            five_wicket_hauls: five_wicket_hauls.rows[0].five_wicket_hauls,
+
+            runs_concede_match: runs_wickets_match.rows
         });
 
     } catch (err) {
