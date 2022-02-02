@@ -19,6 +19,16 @@
         <li><b>Average: </b>{{playerDetails.batting_avg}}</li>
     </ol>
 
+    <div class="bar-chart" style="display: block; width: 600px; height: 600px;">
+        <canvas baseChart
+          [data]="barChartData"
+          [options]="barChartOptions"
+          [plugins]="barChartPlugins"
+          [type]="barChartType"
+        >
+        </canvas>
+    </div>
+
     <h2> Player Bowling Statistics</h2>
     <ol type="a">
         <li><b>Matches: </b>{{playerDetails.matches_bowled}}</li>
