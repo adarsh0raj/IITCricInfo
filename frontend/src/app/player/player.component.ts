@@ -2,9 +2,32 @@ import { Component, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
-import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
+
+import {
+  ChartComponent,
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexFill,
+  ApexYAxis,
+  ApexTooltip,
+  ApexTitleSubtitle,
+  ApexXAxis
+} from "ng-apexcharts";
+
 import { player } from '../interfaces/player';
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis | ApexYAxis[];
+  title: ApexTitleSubtitle;
+  labels: string[];
+  stroke: any; // ApexStroke;
+  dataLabels: any; // ApexDataLabels;
+};
 
 @Component({
   selector: 'app-player',
@@ -15,6 +38,10 @@ export class PlayerComponent implements OnInit {
 
   playerDetails!: player;
   id!: any;
+  
+  // Bools for graphs
+  public matchesPlayedNotZero = false;
+  public matchesBowledNotZero = false;
 
   // Bar Chart
   public barChartOptions: ChartConfiguration['options'] = {
@@ -38,6 +65,55 @@ export class PlayerComponent implements OnInit {
     datasets: []
   };
 
+  // Mixed Graph for Bowling Stats
+
+  public chartOptions: ChartOptions = {
+    series: [
+      {
+        name: "Runs Conceded",
+        type: "column",
+        data: []
+      },
+      {
+        name: "Wickets Taken",
+        type: "line",
+        data: []
+      }
+    ],
+    chart: {
+      height: 350,
+      type: "line"
+    },
+    stroke: {
+      width: [0, 4]
+    },
+    title: {
+      text: "Bowling Stats"
+    },
+    dataLabels: {
+      enabled: true,
+      enabledOnSeries: [1]
+    },
+    labels: [],
+    xaxis: {
+      type: "numeric"
+    },
+    yaxis: [
+      {
+        title: {
+          text: "Runs Conceded"
+        }
+      },
+      {
+        opposite: true,
+        title: {
+          text: "Wickets Taken"
+        }
+      }
+    ]
+  };
+  
+
   constructor(private http: HttpClient,
     private activatedRoute: ActivatedRoute) { }
 
@@ -52,6 +128,14 @@ export class PlayerComponent implements OnInit {
       this.http.get<player>(`http://localhost:3000/players/${this.id}`).subscribe(data => {
         console.log(data);
         this.playerDetails = data;
+
+        // Setting Bools
+        if (this.playerDetails.runs_match.length != 0) {
+          this.matchesPlayedNotZero = true;
+        }
+        if (this.playerDetails.matches_bowled != 0) {
+          this.matchesBowledNotZero = true;
+        }
 
         // Bar Chart Data
         this.barChartData.labels = this.playerDetails.runs_match.map(runs => runs.match_id);
@@ -74,6 +158,12 @@ export class PlayerComponent implements OnInit {
           }
         });
 
+        // Mixed Graph Data
+        this.chartOptions.labels = this.playerDetails.runs_conceded_match.map(d => d.match_id.toString());
+        this.chartOptions.series[0].data = this.playerDetails.runs_conceded_match.map(d => d.runs);
+        this.chartOptions.series[1].data = this.playerDetails.runs_conceded_match.map(d => d.wickets);
+
+        console.log(this.chartOptions.series);
       });
     });
   }
