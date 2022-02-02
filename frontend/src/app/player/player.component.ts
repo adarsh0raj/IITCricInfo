@@ -96,7 +96,7 @@ export class PlayerComponent implements OnInit {
     },
     labels: [],
     xaxis: {
-      type: "numeric"
+      type: "category",
     },
     yaxis: [
       {
@@ -163,7 +163,6 @@ export class PlayerComponent implements OnInit {
         this.chartOptions.series[0].data = this.playerDetails.runs_conceded_match.map(d => d.runs);
         this.chartOptions.series[1].data = this.playerDetails.runs_conceded_match.map(d => d.wickets);
 
-        console.log(this.chartOptions.series);
       });
     });
   }

@@ -60,7 +60,7 @@ app.get('/players/:id', async(req, res) => {
         const five_wicket_hauls = await pool.query("SELECT COUNT(*) as five_wicket_hauls FROM (SELECT COUNT(*) AS wkts, match_id FROM ball_by_ball WHERE bowler = $1 AND out_type IS NOT NULL AND out_type NOT IN ('run out', 'retired hurt') GROUP BY match_id) table1 WHERE wkts >= 5", [parseInt(req.params.id)]);
 
         // runs conceded and wickets taken per match
-        const runs_wickets_match = await pool.query("select match_id, sum(runs_scored) as runs_conceded, count(out_type) as wickets from ball_by_ball where bowler = $1 group by match_id", [parseInt(req.params.id)]);
+        const runs_wickets_match = await pool.query("select match_id, sum(runs_scored) as runs, count(out_type) as wickets from ball_by_ball where bowler = $1 group by match_id", [parseInt(req.params.id)]);
         
         if(overs_bowled.rows[0].overs_bowled != 0)
         {
@@ -69,6 +69,9 @@ app.get('/players/:id', async(req, res) => {
 
         if (runs.rows[0].sum === null) {
             runs.rows[0].sum = 0;
+        }
+        if (runs_conceded.rows[0].runs_conceded === null) {
+            runs_conceded.rows[0].runs_conceded = 0;
         }
         if (highest.rows[0].max === null) {
             highest.rows[0].max = 0;
@@ -99,7 +102,7 @@ app.get('/players/:id', async(req, res) => {
             economy: economy,
             five_wicket_hauls: five_wicket_hauls.rows[0].five_wicket_hauls,
 
-            runs_concede_match: runs_wickets_match.rows
+            runs_conceded_match: runs_wickets_match.rows
         });
 
     } catch (err) {
