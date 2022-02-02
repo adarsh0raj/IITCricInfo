@@ -8,13 +8,15 @@ import { PlayerComponent } from './player/player.component';
 import { PointsComponent } from './points/points.component';
 import { VenueComponent } from './venue/venue.component';
 import { VenuedetailComponent } from './venuedetail/venuedetail.component';
+import { SeasonyearComponent } from './seasonyear/seasonyear.component';
 
 
 const routes: Routes = [
   { path: 'home', component: AboutComponent },
   { path: 'matches', component: MatchComponent },
   { path: 'players/:id', component: PlayerComponent },
-  { path: 'pointstable', component: PointsComponent },
+  { path: 'pointstable', component: SeasonyearComponent },
+  { path: 'pointstable/:id', component: PointsComponent },
   { path: 'venues', component: VenueComponent },
   { path: 'venues/:id', component: VenuedetailComponent },
   {path: '', redirectTo: '/home', pathMatch: 'full'},

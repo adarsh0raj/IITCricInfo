@@ -110,6 +110,15 @@ app.get('/players/:id', async(req, res) => {
     }
 });
 
+app.get('/years', async (req, res) => {
+    try {
+        const years = await pool.query('SELECT DISTINCT season_year FROM match ORDER BY season_year ASC');
+        res.json(years.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
 app.get('/pointstable/:year', async(req, res) => {
     try {
         const pointstable = await pool.query("WITH teams(team_id) AS \

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { venue, venue_details } from '../interfaces/venue';
+import { venue } from '../interfaces/venue';
 
 @Component({
   selector: 'app-venue',

@@ -1,3 +1,25 @@
-<div class="start">
-    <p>points works!</p>
+<div class="start container points-div">
+    <h1>Points Table for Season Year: {{year}}</h1>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Team Name</th>
+                <th>Matches Won</th>
+                <th>Matches Lost</th>
+                <th>Matches Tied</th>
+                <th>Points</th>
+                <th>NRR</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let point of pointsTable">
+                <td>{{point.team_name}}</td>
+                <td>{{point.won}}</td>
+                <td>{{point.lost}}</td>
+                <td>{{point.tied}}</td>
+                <td>{{point.points}}</td>
+                <td>{{point.nrr}}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>

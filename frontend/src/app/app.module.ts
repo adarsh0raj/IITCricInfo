@@ -13,6 +13,7 @@ import { PlayerComponent } from './player/player.component';
 import { PointsComponent } from './points/points.component';
 import { AboutComponent } from './about/about.component';
 import { VenuedetailComponent } from './venuedetail/venuedetail.component';
+import { SeasonyearComponent } from './seasonyear/seasonyear.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { VenuedetailComponent } from './venuedetail/venuedetail.component';
     PlayerComponent,
     PointsComponent,
     AboutComponent,
-    VenuedetailComponent
+    VenuedetailComponent,
+    SeasonyearComponent
   ],
   imports: [
     BrowserModule,
