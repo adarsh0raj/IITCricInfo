@@ -95,11 +95,11 @@ app.get('/matches/:id', async(req, res) => {
         AND F.umpire_id = I.umpire_id AND G.role_desc = 'Field' AND H.role_desc = 'Field' AND I.role_desc='Third' \
         AND G.umpire_id < H.umpire_id AND match.match_id = $1", [parseInt(req.params.id)]);
 
-        const playing_11_team1 = await pool.query("SELECT player_name FROM player, player_match, match \
+        const playing_11_team1 = await pool.query("SELECT player.player_id, player_name FROM player, player_match, match \
         WHERE player_match.match_id = match.match_id AND player.player_id = player_match.player_id \
         AND player_match.team_id = match.team1 AND match.match_id = $1", [parseInt(req.params.id)]);
 
-        const playing_11_team2 = await pool.query("SELECT player_name FROM player, player_match, match \
+        const playing_11_team2 = await pool.query("SELECT player.player_id, player_name FROM player, player_match, match \
         WHERE player_match.match_id = match.match_id AND player.player_id = player_match.player_id \
         AND player_match.team_id = match.team2 AND match.match_id = $1", [parseInt(req.params.id)]);
 
@@ -114,7 +114,7 @@ app.get('/matches/:id', async(req, res) => {
         bowler_summary(bowler, balls, runs, wickets) AS \
         (SELECT bowler, COUNT(*), SUM(runs), SUM(wkt) FROM bbb_wkts \
          GROUP BY bowler) \
-        SELECT player_name AS bowler, balls, runs, wickets FROM bowler_summary, player \
+        SELECT player.player_id, player_name AS bowler, balls, runs, wickets FROM bowler_summary, player \
         WHERE player.player_id = bowler", [parseInt(req.params.id)]);
 
         const innings2_bowling = await pool.query("WITH bbb_wkts(bowler, over_id, ball_id, runs, wkt) AS \
@@ -128,7 +128,7 @@ app.get('/matches/:id', async(req, res) => {
         bowler_summary(bowler, balls, runs, wickets) AS \
         (SELECT bowler, COUNT(*), SUM(runs), SUM(wkt) FROM bbb_wkts \
          GROUP BY bowler) \
-        SELECT player_name AS bowler, balls, runs, wickets FROM bowler_summary, player \
+        SELECT player.player_id, player_name AS bowler, balls, runs, wickets FROM bowler_summary, player \
         WHERE player.player_id = bowler", [parseInt(req.params.id)]);
 
         const innings1_bowler_summary = await pool.query("WITH bbb_wkts(bowler, over_id, ball_id, runs, wkt) AS \
@@ -142,10 +142,10 @@ app.get('/matches/:id', async(req, res) => {
         bowler_summary(bowler, balls, runs, wickets) AS \
         (SELECT bowler, COUNT(*), SUM(runs), SUM(wkt) FROM bbb_wkts \
          GROUP BY bowler), \
-         bowler_scorecard(bowler, runs, wickets) AS \
-        (SELECT player_name AS bowler, runs, wickets FROM bowler_summary, player \
+         bowler_scorecard(player_id, bowler, runs, wickets) AS \
+        (SELECT player.player_id, player_name AS bowler, runs, wickets FROM bowler_summary, player \
         WHERE player.player_id = bowler) \
-        SELECT bowler, runs, wickets FROM bowler_scorecard \
+        SELECT player_id, bowler, runs, wickets FROM bowler_scorecard \
         WHERE wickets > 0 \
         ORDER BY wickets DESC, runs ASC, bowler ASC \
         LIMIT 3", [parseInt(req.params.id)]);
@@ -161,10 +161,10 @@ app.get('/matches/:id', async(req, res) => {
         bowler_summary(bowler, balls, runs, wickets) AS \
         (SELECT bowler, COUNT(*), SUM(runs), SUM(wkt) FROM bbb_wkts \
          GROUP BY bowler), \
-         bowler_scorecard(bowler, runs, wickets) AS \
-        (SELECT player_name AS bowler, runs, wickets FROM bowler_summary, player \
+         bowler_scorecard(player_id, bowler, runs, wickets) AS \
+        (SELECT player.player_id, player_name AS bowler, runs, wickets FROM bowler_summary, player \
         WHERE player.player_id = bowler) \
-        SELECT bowler, runs, wickets FROM bowler_scorecard \
+        SELECT player_id, bowler, runs, wickets FROM bowler_scorecard \
         WHERE wickets > 0 \
         ORDER BY wickets DESC, runs ASC, bowler ASC \
         LIMIT 3", [parseInt(req.params.id)]);
