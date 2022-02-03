@@ -14,6 +14,83 @@ app.use(cors());
 app.use(express.json());
 
 // Routes 
+app.get('/matches', async(req, res) => {
+    try {
+        const matches = await pool.query("SELECT match_id, A.team_name as team1, B.team_name as team2, venue.venue_name as stadium_name, venue.city_name as city_name, \
+            C.team_name as winner, win_type, win_margin FROM team A, team B, team C, \
+            match, venue WHERE match.venue_id = venue.venue_id AND match.team1 = A.team_id AND \
+            match.team2 = B.team_id AND match.match_winner = C.team_id \
+            ORDER BY season_year DESC \
+            OFFSET $1 \
+            LIMIT $2", [(parseInt(req.query.skip) * parseInt(req.query.limit)), parseInt(req.query.skip)]);
+        res.json(matches.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+
+});
+
+app.get('/matches/:id', async(req, res) => {
+    try {
+        const innings1_progress = await pool.query("WITH bbb_team(over_id, ball_id, runs, out_type, striker, team_id) AS \
+        (SELECT over_id, ball_id, (runs_scored + extra_runs) AS runs, out_type, striker, team_id \
+        FROM ball_by_ball, player_match WHERE striker=player_match.player_id AND player_match.match_id = ball_by_ball.match_id \
+        AND ball_by_ball.match_id = $1 AND innings_no=1), \
+        ball_wicket(over_id, ball_id, wicket, team_id) AS \
+        (SELECT over_id, ball_id, 1, team_id FROM bbb_team \
+        WHERE out_type IS NOT NULL AND out_type <> 'retired hurt' \
+        GROUP BY over_id, ball_id, team_id \
+        UNION \
+        SELECT over_id, ball_id, 0, team_id FROM bbb_team \
+        WHERE out_type IS NULL \
+        GROUP BY over_id, ball_id, team_id), \
+        team_wickets(over_id, wickets, team_id) AS \
+        (SELECT over_id, SUM(wicket), team_id FROM ball_wicket \
+        GROUP BY over_id, team_id), \
+        over_runs(over_id, runs, team_id) AS \
+        (SELECT over_id, SUM(runs), team_id FROM bbb_team \
+        GROUP BY over_id, team_id), \
+        team_runs(over_id, runs, team_id) AS \
+        (SELECT A.over_id, SUM(B.runs), A.team_id FROM over_runs A, over_runs B \
+        WHERE B.over_id<=A.over_id \
+        GROUP BY A.over_id, A.team_id) \
+        SELECT team_runs.over_id AS over_id, runs, wickets, team_name FROM team_runs, team_wickets, team \
+        WHERE team_runs.over_id=team_wickets.over_id AND team_runs.team_id = team.team_id \
+        ORDER BY team_runs.over_id", [parseInt(req.params.id)]);
+
+        const innings2_progress = await pool.query("WITH bbb_team(over_id, ball_id, runs, out_type, striker, team_id) AS \
+        (SELECT over_id, ball_id, (runs_scored + extra_runs) AS runs, out_type, striker, team_id \
+        FROM ball_by_ball, player_match WHERE striker=player_match.player_id AND player_match.match_id = ball_by_ball.match_id \
+        AND ball_by_ball.match_id = $1 AND innings_no=2), \
+        ball_wicket(over_id, ball_id, wicket, team_id) AS \
+        (SELECT over_id, ball_id, 1, team_id FROM bbb_team \
+        WHERE out_type IS NOT NULL \
+        GROUP BY over_id, ball_id, team_id \
+        UNION \
+        SELECT over_id, ball_id, 0, team_id FROM bbb_team \
+        WHERE out_type IS NULL OR out_type='retired hurt' \
+        GROUP BY over_id, ball_id, team_id), \
+        team_wickets(over_id, wickets, team_id) AS \
+        (SELECT over_id, SUM(wicket), team_id FROM ball_wicket \
+        GROUP BY over_id, team_id), \
+        over_runs(over_id, runs, team_id) AS \
+        (SELECT over_id, SUM(runs), team_id FROM bbb_team \
+        GROUP BY over_id, team_id), \
+        team_runs(over_id, runs, team_id) AS \
+        (SELECT A.over_id, SUM(B.runs), A.team_id FROM over_runs A, over_runs B \
+        WHERE B.over_id<=A.over_id \
+        GROUP BY A.over_id, A.team_id) \
+        SELECT team_runs.over_id AS over_id, runs, wickets, team_name FROM team_runs, team_wickets, team \
+        WHERE team_runs.over_id=team_wickets.over_id AND team_runs.team_id = team.team_id \
+        ORDER BY team_runs.over_id", [parseInt(req.params.id)]);
+
+        res.json({innings1_progress: innings1_progress.rows,
+        innings2_progress: innings2_progress.rows});
+    } catch (err) {
+        console.error(err.message);
+    }
+})
+
 app.get('/teams', async(req, res) => {
     try {
         const teams = await pool.query('SELECT * FROM team');
@@ -48,7 +125,7 @@ app.get('/players/:id', async(req, res) => {
         const batting_avg = await pool.query('SELECT COALESCE((SUM(runs_scored) * 1.0 / COALESCE(Nullif((SELECT COUNT(*) FROM ball_by_ball WHERE striker = $1 AND out_type IS NOT NULL), 0), 1.0)), 0.0) AS batting_avg FROM ball_by_ball WHERE striker = $1', [parseInt(req.params.id)]);
 
         // Runs Scored along with match id
-        const runs_match = await pool.query("SELECT match_id, sum(runs_scored) as runs FROM ball_by_ball WHERE striker = $1 group by match_id", [parseInt(req.params.id)]);
+        const runs_match = await pool.query("SELECT match_id, sum(runs_scored) as runs FROM ball_by_ball WHERE striker = $1 group by match_id order by match_id", [parseInt(req.params.id)]);
         
         // Bowling Stats
         const matches_bowled = await pool.query('SELECT COUNT(DISTINCT match_id) AS matches_bowled FROM ball_by_ball WHERE bowler = $1', [parseInt(req.params.id)]);
@@ -60,7 +137,15 @@ app.get('/players/:id', async(req, res) => {
         const five_wicket_hauls = await pool.query("SELECT COUNT(*) as five_wicket_hauls FROM (SELECT COUNT(*) AS wkts, match_id FROM ball_by_ball WHERE bowler = $1 AND out_type IS NOT NULL AND out_type NOT IN ('run out', 'retired hurt') GROUP BY match_id) table1 WHERE wkts >= 5", [parseInt(req.params.id)]);
 
         // runs conceded and wickets taken per match
-        const runs_wickets_match = await pool.query("select match_id, sum(runs_scored) as runs, count(out_type) as wickets from ball_by_ball where bowler = $1 group by match_id", [parseInt(req.params.id)]);
+        const runs_wickets_match = await pool.query("WITH bbb_wkts(match_id, innings_no, over_id, ball_id, runs, wkt) AS \
+        (SELECT match_id, innings_no, over_id, ball_id, (runs_scored + extra_runs), 1 FROM ball_by_ball \
+        WHERE out_type IS NOT NULL AND out_type NOT IN ('retired hurt', 'run out') AND bowler=$1 \
+        UNION \
+        SELECT match_id, innings_no, over_id, ball_id, (runs_scored + extra_runs), 0 FROM ball_by_ball \
+        WHERE (out_type IS NULL OR out_type IN ('retired hurt', 'run out')) AND bowler=$1) \
+        SELECT match_id, SUM(runs) AS runs, SUM(wkt) AS wickets FROM bbb_wkts \
+        GROUP BY match_id \
+        ORDER BY match_id", [parseInt(req.params.id)]);
         
         if(overs_bowled.rows[0].overs_bowled != 0)
         {
