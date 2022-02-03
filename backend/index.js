@@ -17,12 +17,12 @@ app.use(express.json());
 app.get('/matches', async(req, res) => {
     try {
         const matches = await pool.query("SELECT match_id, A.team_name as team1, B.team_name as team2, venue.venue_name as stadium_name, venue.city_name as city_name, \
-            C.team_name as winner, win_type, win_margin FROM team A, team B, team C, \
+            C.team_name as winner, win_type, win_margin, season_year FROM team A, team B, team C, \
             match, venue WHERE match.venue_id = venue.venue_id AND match.team1 = A.team_id AND \
             match.team2 = B.team_id AND match.match_winner = C.team_id \
             ORDER BY season_year DESC \
             OFFSET $1 \
-            LIMIT $2", [(parseInt(req.query.skip) * parseInt(req.query.limit)), parseInt(req.query.skip)]);
+            LIMIT $2", [(parseInt(req.query.skip) * parseInt(req.query.limit)), parseInt(req.query.limit)]);
         res.json(matches.rows);
     } catch (err) {
         console.error(err.message);
@@ -169,16 +169,18 @@ app.get('/matches/:id', async(req, res) => {
         ORDER BY wickets DESC, runs ASC, bowler ASC \
         LIMIT 3", [parseInt(req.params.id)]);
 
-        res.json({innings1_progress: innings1_progress.rows,
-        innings2_progress: innings2_progress.rows,
-        match_info_without_11: match_info_without_11.rows,
-        playing_11_team1: playing_11_team1.rows,
-        playing_11_team2: playing_11_team2.rows,
-        innings1_bowling: innings1_bowling.rows,
-        innings2_bowling: innings2_bowling.rows,
-        innings1_bowler_summary: innings1_bowler_summary.rows,
-        innings2_bowler_summary: innings2_bowler_summary.rows
-});
+        res.json({
+            innings1_progress: innings1_progress.rows,
+            innings2_progress: innings2_progress.rows,
+            match_info_without_11: match_info_without_11.rows,
+            playing_11_team1: playing_11_team1.rows,
+            playing_11_team2: playing_11_team2.rows,
+            innings1_bowling: innings1_bowling.rows,
+            innings2_bowling: innings2_bowling.rows,
+            innings1_bowler_summary: innings1_bowler_summary.rows,
+            innings2_bowler_summary: innings2_bowler_summary.rows
+        });
+        
     } catch (err) {
         console.error(err.message);
     }

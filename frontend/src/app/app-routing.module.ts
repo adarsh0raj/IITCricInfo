@@ -9,11 +9,13 @@ import { PointsComponent } from './points/points.component';
 import { VenueComponent } from './venue/venue.component';
 import { VenuedetailComponent } from './venuedetail/venuedetail.component';
 import { SeasonyearComponent } from './seasonyear/seasonyear.component';
+import { MatchdetailComponent } from './matchdetail/matchdetail.component';
 
 
 const routes: Routes = [
   { path: 'home', component: AboutComponent },
   { path: 'matches', component: MatchComponent },
+  { path: 'matches/:id', component: MatchdetailComponent },
   { path: 'players/:id', component: PlayerComponent },
   { path: 'pointstable', component: SeasonyearComponent },
   { path: 'pointstable/:id', component: PointsComponent },

@@ -14,6 +14,7 @@ import { PointsComponent } from './points/points.component';
 import { AboutComponent } from './about/about.component';
 import { VenuedetailComponent } from './venuedetail/venuedetail.component';
 import { SeasonyearComponent } from './seasonyear/seasonyear.component';
+import { MatchdetailComponent } from './matchdetail/matchdetail.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { SeasonyearComponent } from './seasonyear/seasonyear.component';
     PointsComponent,
     AboutComponent,
     VenuedetailComponent,
-    SeasonyearComponent
+    SeasonyearComponent,
+    MatchdetailComponent
   ],
   imports: [
     BrowserModule,
