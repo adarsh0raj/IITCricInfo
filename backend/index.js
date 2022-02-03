@@ -26,6 +26,13 @@ app.get('/matches', async(req, res) => {
 
 app.get('/matches/:id', async(req, res) => {
     try {
+
+        const full_info = await pool.query("SELECT match_id, A.team_name as team1, B.team_name as team2, venue.venue_name as stadium_name, venue.city_name as city_name, \
+        C.team_name as winner, win_type, win_margin, season_year FROM team A, team B, team C, \
+        match, venue WHERE match.match_id = $1 and match.venue_id = venue.venue_id AND match.team1 = A.team_id AND \
+        match.team2 = B.team_id AND match.match_winner = C.team_id \
+        ORDER BY season_year", [parseInt(req.params.id)]);
+
         //score comparision
         const innings1_progress = await pool.query("WITH bbb_team(over_id, ball_id, runs, out_type, striker, team_id) AS \
         (SELECT over_id, ball_id, (runs_scored + extra_runs) AS runs, out_type, striker, team_id \
@@ -80,7 +87,7 @@ app.get('/matches/:id', async(req, res) => {
         ORDER BY team_runs.over_id", [parseInt(req.params.id)]);
 
         //match info
-        const match_info_without_11 = await pool.query("SELECT match.match_id, A.team_name as team1, B.team_name as team2, C.team_name as toss_winner, \
+        const match_info_without_11 = await pool.query("SELECT match.match_id, match.season_year, A.team_name as team1, B.team_name as team2, C.team_name as toss_winner, \
         toss_name, venue_name, D.umpire_name, E.umpire_name, F.umpire_name \
         FROM match, venue, umpire_match G, umpire_match H, umpire_match I, \
         umpire D, umpire E, umpire F, \
@@ -379,6 +386,9 @@ app.get('/matches/:id', async(req, res) => {
 
 
         res.json({
+
+            full_info: full_info.rows[0],
+            
             innings1_progress: innings1_progress.rows,
             innings2_progress: innings2_progress.rows,
 
