@@ -4,12 +4,6 @@ const pool = require('./db');
 
 const cors = require('cors');
 app.use(cors());
-// const corsOptions ={
-//     origin:'http://localhost:3000', 
-//     credentials:true,            //access-control-allow-credentials:true
-//     optionSuccessStatus:200
-// }
-// app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -607,8 +601,12 @@ app.get('/venues/:id', async(req, res) => {
         match_total(match_id, total, season_year, parity) AS \
         (SELECT match_id, SUM(runs), MIN(season_year), parity FROM bbb_yr \
         GROUP BY match_id, parity) \
-        SELECT season_year, AVG(total) AS avg_first_innings_score FROM match_total \
+        SELECT season_year, AVG(total) AS score FROM match_total \
         GROUP BY season_year", [parseInt(req.params.id)]);
+
+        if (highest_chased.rows[0].total === null) {
+            highest_chased.rows[0].total = 0;
+        }
 
         res.json({
             venue_id: venue.rows[0].venue_id,

@@ -5,6 +5,29 @@ import { HttpClient } from '@angular/common/http';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
+import {
+  ChartComponent,
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexDataLabels,
+  ApexTitleSubtitle,
+  ApexStroke,
+  ApexGrid,
+  ApexMarkers
+} from "ng-apexcharts";
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  dataLabels: ApexDataLabels;
+  grid: ApexGrid;
+  stroke: ApexStroke;
+  markers: ApexMarkers;
+  title: ApexTitleSubtitle;
+};
+
 import { venue_details } from '../interfaces/venue';
 
 @Component({
@@ -45,6 +68,48 @@ export class VenuedetailComponent implements OnInit {
   public pieChartType: ChartType = 'pie';
   public pieChartPlugins = [ DatalabelsPlugin ];
 
+  // Line Chart
+
+  public chartOptions: ChartOptions = {
+    series: [
+      {
+        name: "Average 1st Innings Score",
+        data: []
+      }
+    ],
+    chart: {
+      height: 350,
+      type: "line",
+      zoom: {
+        enabled: false
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: "straight"
+    },
+    markers: {
+      size: 5
+    },
+    title: {
+      text: "Average 1st Innings Score For Different Seasons",
+      align: "left"
+    },
+    grid: {
+      row: {
+        colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+        opacity: 0.5
+      }
+    },
+    xaxis: {
+      categories: []
+    }
+  };
+
+  // Constructor and other methods
+
   constructor(private http: HttpClient,
     private activatedRoute: ActivatedRoute,
     private router: Router) { 
@@ -62,9 +127,14 @@ export class VenuedetailComponent implements OnInit {
         console.log(data);
         this.venueDetails = data;
 
+        // Pie Chart Data
         this.pieChartData.datasets = [
           { data: [this.venueDetails.matches_won_bat, this.venueDetails.matches_won_bowl, this.venueDetails.matches_draw],
         }];
+
+        // Line Chart Data
+        this.chartOptions.xaxis.categories = this.venueDetails.avg_first_innings_score.map(x => x.season_year.toString());
+        this.chartOptions.series[0].data = this.venueDetails.avg_first_innings_score.map(x => x.score);
 
       });
     });

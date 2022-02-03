@@ -1,13 +1,23 @@
-<div class="start container">
-    <h1>Venues</h1>
-    <br>
-    <br>
-    <ul *ngFor="let venue of venues">
-        <li>
-            <a [routerLink]="['/venues', venue.venue_id]">{{venue.venue_name}}</a>,
-            {{venue.city_name}},
-            {{venue.country_name}},
-            {{venue.capacity}}
-        </li>
-    </ul>
+<div class="start container venue-div">
+    <h1>IPL Venues Statistics</h1>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Venue Name</th>
+                <th>City Name</th>
+                <th>Country Name</th>
+                <th>Capacity</th>
+                <th>Matches Played</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let venue of venues">
+                <td><a [routerLink]="['/venues', venue.venue_id]">{{venue.venue_name}}</a></td>
+                <td>{{venue.city_name}}</td>
+                <td>{{venue.country_name}}</td>
+                <td>{{venue.capacity}}</td>
+                <td>{{venue.matches_played}}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
