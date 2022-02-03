@@ -572,7 +572,11 @@ app.get('/pointstable/:year', async(req, res) => {
 
 app.get('/venues', async(req, res) => {
     try {
-        const venues = await pool.query('SELECT * FROM venue');
+        const venues = await pool.query("WITH venue_matches(venue_id, num_matches) AS \
+        (SELECT venue_id, COUNT(*) FROM match GROUP BY venue_id) \
+        SELECT venue.venue_id AS venue_id, venue_name, city_name, country_name, capacity, COALESCE(num_matches, 0) AS matches_played \
+        FROM venue \
+        FULL OUTER JOIN venue_matches ON (venue.venue_id = venue_matches.venue_id)");
         res.json(venues.rows);
     } catch (err) {
         console.error(err.message);
@@ -586,11 +590,25 @@ app.get('/venues/:id', async(req, res) => {
 
         const highest_rec = await pool.query("select max(runs) from (select match.match_id, ball_by_ball.innings_no, (sum(ball_by_ball.runs_scored)+sum(ball_by_ball.extra_runs)) as runs from match, ball_by_ball where match.venue_id = $1 and match.match_id = ball_by_ball.match_id group by match.match_id, ball_by_ball.innings_no) as t", [parseInt(req.params.id)]);
         const lowest_rec = await pool.query("select min(runs) from (select match.match_id, ball_by_ball.innings_no, (sum(ball_by_ball.runs_scored)+sum(ball_by_ball.extra_runs)) as runs from match, ball_by_ball where match.venue_id = $1 and match.match_id = ball_by_ball.match_id group by match.match_id, ball_by_ball.innings_no) as t", [parseInt(req.params.id)]);
-        // const highest_chased = 
+        const highest_chased = await pool.query("WITH chased_innings_totals(match_id, total) AS \
+        (SELECT ball_by_ball.match_id, SUM(runs_scored+extra_runs) FROM ball_by_ball, match \
+        WHERE ball_by_ball.match_id = match.match_id AND match.venue_id = $1 AND innings_no=2 \
+        AND match.win_type='wickets' \
+        GROUP BY ball_by_ball.match_id) \
+        SELECT MAX(total) AS total FROM chased_innings_totals", [parseInt(req.params.id)]);
 
         const matches_won_bat = await pool.query("SELECT count(*) FROM match WHERE venue_id = $1 AND ((match_winner = toss_winner and toss_name = 'bat') or (match_winner != toss_winner and toss_name = 'field'))", [parseInt(req.params.id)]);
         const matches_won_bowl = await pool.query("SELECT count(*) FROM match WHERE venue_id = $1 AND ((match_winner = toss_winner and toss_name = 'field') or (match_winner != toss_winner and toss_name = 'bat'))", [parseInt(req.params.id)]);
         const matches_draw = await pool.query("SELECT count(*) FROM match WHERE venue_id = $1 AND (match_winner is NULL or (match_winner != team1 and match_winner != team2))", [parseInt(req.params.id)]);
+
+        const avg_first_innings_score = await pool.query("WITH bbb_yr(match_id, innings_no, over_id, ball_id, runs, season_year, parity) AS \
+        (SELECT match.match_id, innings_no, over_id, ball_id, (runs_scored+extra_runs), season_year, ((season_year-1)/2) FROM ball_by_ball bbb, match, venue \
+        WHERE bbb.match_id = match.match_id AND innings_no=1 AND venue.venue_id = $1 AND match.venue_id = venue.venue_id), \
+        match_total(match_id, total, season_year, parity) AS \
+        (SELECT match_id, SUM(runs), MIN(season_year), parity FROM bbb_yr \
+        GROUP BY match_id, parity) \
+        SELECT season_year, AVG(total) AS avg_first_innings_score FROM match_total \
+        GROUP BY season_year", [parseInt(req.params.id)]);
 
         res.json({
             venue_id: venue.rows[0].venue_id,
@@ -600,10 +618,11 @@ app.get('/venues/:id', async(req, res) => {
             matches: parseInt(matches.rows[0].count),
             highest_rec: parseInt(highest_rec.rows[0].max),
             lowest_rec: parseInt(lowest_rec.rows[0].min),
-            // highest_chased: parseInt(highest_chased.rows[0].max),
+            highest_chased: parseInt(highest_chased.rows[0].total),
             matches_won_bat: parseInt(matches_won_bat.rows[0].count)/parseInt(matches.rows[0].count)*100,
             matches_won_bowl: parseInt(matches_won_bowl.rows[0].count)/parseInt(matches.rows[0].count)*100,
-            matches_draw: parseInt(matches_draw.rows[0].count)/parseInt(matches.rows[0].count)*100
+            matches_draw: parseInt(matches_draw.rows[0].count)/parseInt(matches.rows[0].count)*100,
+            avg_first_innings_score: avg_first_innings_score.rows
         });
 
     } catch (err) {
