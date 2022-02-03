@@ -32,6 +32,7 @@ app.get('/matches', async(req, res) => {
 
 app.get('/matches/:id', async(req, res) => {
     try {
+        //score comparision
         const innings1_progress = await pool.query("WITH bbb_team(over_id, ball_id, runs, out_type, striker, team_id) AS \
         (SELECT over_id, ball_id, (runs_scored + extra_runs) AS runs, out_type, striker, team_id \
         FROM ball_by_ball, player_match WHERE striker=player_match.player_id AND player_match.match_id = ball_by_ball.match_id \
@@ -84,6 +85,7 @@ app.get('/matches/:id', async(req, res) => {
         WHERE team_runs.over_id=team_wickets.over_id AND team_runs.team_id = team.team_id \
         ORDER BY team_runs.over_id", [parseInt(req.params.id)]);
 
+        //match info
         const match_info_without_11 = await pool.query("SELECT match.match_id, A.team_name as team1, B.team_name as team2, C.team_name as toss_winner, \
         toss_name, venue_name, D.umpire_name, E.umpire_name, F.umpire_name \
         FROM match, venue, umpire_match G, umpire_match H, umpire_match I, \
@@ -103,6 +105,40 @@ app.get('/matches/:id', async(req, res) => {
         WHERE player_match.match_id = match.match_id AND player.player_id = player_match.player_id \
         AND player_match.team_id = match.team2 AND match.match_id = $1", [parseInt(req.params.id)]);
 
+        //scorecard
+        const innings1_batting = await pool.query("WITH bbb_team(match_id, over_id, ball_id, runs, player_id, team_id) AS \
+        (SELECT ball_by_ball.match_id, over_id, ball_id, runs_scored AS runs, striker, team_id \
+        FROM ball_by_ball, player_match WHERE striker=player_match.player_id AND player_match.match_id = ball_by_ball.match_id \
+        AND ball_by_ball.match_id = $1 AND innings_no=1), \
+        playing_11(player_id) AS \
+        (SELECT DISTINCT player_match.player_id FROM player_match, bbb_team WHERE player_match.match_id = bbb_team.match_id \
+        AND player_match.team_id=(SELECT DISTINCT team_id FROM bbb_team)), \
+        player_balls(player_id, balls, over_id, ball_id) AS \
+        (SELECT bbb_team.player_id, COUNT(*), MIN(over_id), MIN(ball_id) FROM bbb_team \
+        GROUP BY bbb_team.player_id), \
+        player_runs(player_id, runs) AS \
+        (SELECT player_id, SUM(runs) FROM bbb_team \
+        GROUP BY player_id), \
+        player_fours(player_id, fours) AS \
+        (SELECT player_id, COUNT(*) FROM bbb_team \
+         WHERE runs=4 \
+        GROUP BY player_id), \
+        player_sixes(player_id, sixes) AS \
+        (SELECT player_id, COUNT(*) FROM bbb_team \
+         WHERE runs=6 \
+        GROUP BY player_id), \
+        scorecard(player_id, runs, fours, sixes, balls, over_id, ball_id) AS \
+        (SELECT playing_11.player_id, COALESCE(runs, 0), COALESCE(fours, 0), COALESCE(sixes, 0), COALESCE(balls, 0), COALESCE(over_id, 100), COALESCE(ball_id, 100) \
+         FROM playing_11 \
+         FULL OUTER JOIN player_balls ON (playing_11.player_id = player_balls.player_id) \
+         FULL OUTER JOIN player_fours ON (playing_11.player_id = player_fours.player_id) \
+         FULL OUTER JOIN player_runs ON (playing_11.player_id = player_runs.player_id) \
+         FULL OUTER JOIN player_sixes ON (playing_11.player_id = player_sixes.player_id) \
+        ) \
+        SELECT player.player_id, player_name, runs, fours, sixes, balls FROM scorecard, player \
+        WHERE player.player_id = scorecard.player_id \
+        ORDER BY over_id, ball_id, player.player_id", [parseInt(req.params.id)]);
+
         const innings1_bowling = await pool.query("WITH bbb_wkts(bowler, over_id, ball_id, runs, wkt) AS \
         (SELECT bowler, over_id, ball_id, runs_scored, 1 FROM ball_by_ball \
         WHERE out_type IS NOT NULL AND out_type NOT IN ('retired hurt', 'run out') \
@@ -117,6 +153,40 @@ app.get('/matches/:id', async(req, res) => {
         SELECT player.player_id, player_name AS bowler, balls, runs, wickets FROM bowler_summary, player \
         WHERE player.player_id = bowler", [parseInt(req.params.id)]);
 
+
+        const innings2_batting = await pool.query("WITH bbb_team(match_id, over_id, ball_id, runs, player_id, team_id) AS \
+        (SELECT ball_by_ball.match_id, over_id, ball_id, runs_scored AS runs, striker, team_id \
+        FROM ball_by_ball, player_match WHERE striker=player_match.player_id AND player_match.match_id = ball_by_ball.match_id \
+        AND ball_by_ball.match_id = $1 AND innings_no=2), \
+        playing_11(player_id) AS \
+        (SELECT DISTINCT player_match.player_id FROM player_match, bbb_team WHERE player_match.match_id = bbb_team.match_id \
+        AND player_match.team_id=(SELECT DISTINCT team_id FROM bbb_team)), \
+        player_balls(player_id, balls, over_id, ball_id) AS \
+        (SELECT bbb_team.player_id, COUNT(*), MIN(over_id), MIN(ball_id) FROM bbb_team \
+        GROUP BY bbb_team.player_id), \
+        player_runs(player_id, runs) AS \
+        (SELECT player_id, SUM(runs) FROM bbb_team \
+        GROUP BY player_id), \
+        player_fours(player_id, fours) AS \
+        (SELECT player_id, COUNT(*) FROM bbb_team \
+         WHERE runs=4 \
+        GROUP BY player_id), \
+        player_sixes(player_id, sixes) AS \
+        (SELECT player_id, COUNT(*) FROM bbb_team \
+         WHERE runs=6 \
+        GROUP BY player_id), \
+        scorecard(player_id, runs, fours, sixes, balls, over_id, ball_id) AS \
+        (SELECT playing_11.player_id, COALESCE(runs, 0), COALESCE(fours, 0), COALESCE(sixes, 0), COALESCE(balls, 0), COALESCE(over_id, 100), COALESCE(ball_id, 100) \
+         FROM playing_11 \
+         FULL OUTER JOIN player_balls ON (playing_11.player_id = player_balls.player_id) \
+         FULL OUTER JOIN player_fours ON (playing_11.player_id = player_fours.player_id) \
+         FULL OUTER JOIN player_runs ON (playing_11.player_id = player_runs.player_id) \
+         FULL OUTER JOIN player_sixes ON (playing_11.player_id = player_sixes.player_id) \
+        ) \
+        SELECT player.player_id, player_name, runs, fours, sixes, balls FROM scorecard, player \
+        WHERE player.player_id = scorecard.player_id \
+        ORDER BY over_id, ball_id, player.player_id", [parseInt(req.params.id)]);
+
         const innings2_bowling = await pool.query("WITH bbb_wkts(bowler, over_id, ball_id, runs, wkt) AS \
         (SELECT bowler, over_id, ball_id, runs_scored, 1 FROM ball_by_ball \
         WHERE out_type IS NOT NULL AND out_type NOT IN ('retired hurt', 'run out') \
@@ -130,6 +200,44 @@ app.get('/matches/:id', async(req, res) => {
          GROUP BY bowler) \
         SELECT player.player_id, player_name AS bowler, balls, runs, wickets FROM bowler_summary, player \
         WHERE player.player_id = bowler", [parseInt(req.params.id)]);
+
+        //match summary
+        const innings1_batting_summary = await pool.query("WITH bbb_team(match_id, over_id, ball_id, runs, player_id, team_id) AS \
+        (SELECT ball_by_ball.match_id, over_id, ball_id, runs_scored AS runs, striker, team_id \
+        FROM ball_by_ball, player_match WHERE striker=player_match.player_id AND player_match.match_id = ball_by_ball.match_id  \
+        AND ball_by_ball.match_id = $1 AND innings_no=1), \
+        playing_11(player_id) AS \
+        (SELECT DISTINCT player_match.player_id FROM player_match, bbb_team WHERE player_match.match_id = bbb_team.match_id \
+        AND player_match.team_id=(SELECT DISTINCT team_id FROM bbb_team)), \
+        player_balls(player_id, balls, over_id, ball_id) AS \
+        (SELECT bbb_team.player_id, COUNT(*), MIN(over_id), MIN(ball_id) FROM bbb_team \
+        GROUP BY bbb_team.player_id), \
+        player_runs(player_id, runs) AS \
+        (SELECT player_id, SUM(runs) FROM bbb_team \
+        GROUP BY player_id), \
+        player_fours(player_id, fours) AS \
+        (SELECT player_id, COUNT(*) FROM bbb_team \
+         WHERE runs=4 \
+        GROUP BY player_id), \
+        player_sixes(player_id, sixes) AS \
+        (SELECT player_id, COUNT(*) FROM bbb_team \
+         WHERE runs=6 \
+        GROUP BY player_id), \
+        scorecard(player_id, runs, fours, sixes, balls, over_id, ball_id) AS \
+        (SELECT playing_11.player_id, COALESCE(runs, 0), COALESCE(fours, 0), COALESCE(sixes, 0), COALESCE(balls, 0), COALESCE(over_id, 100), COALESCE(ball_id, 100) \
+         FROM playing_11 \
+         FULL OUTER JOIN player_balls ON (playing_11.player_id = player_balls.player_id) \
+         FULL OUTER JOIN player_fours ON (playing_11.player_id = player_fours.player_id) \
+         FULL OUTER JOIN player_runs ON (playing_11.player_id = player_runs.player_id) \
+         FULL OUTER JOIN player_sixes ON (playing_11.player_id = player_sixes.player_id) \
+        ), \
+        final_scorecard(player_id, player_name, runs, fours, sixes, balls) AS \
+        (SELECT player.player_id, player_name, runs, fours, sixes, balls FROM scorecard, player \
+        WHERE player.player_id = scorecard.player_id \
+        ORDER BY over_id, ball_id, player.player_id) \
+        SELECT player_id, player_name, runs, balls FROM final_scorecard \
+        ORDER BY runs DESC, balls ASC, player_name ASC \
+        LIMIT 3", [parseInt(req.params.id)]);
 
         const innings1_bowler_summary = await pool.query("WITH bbb_wkts(bowler, over_id, ball_id, runs, wkt) AS \
         (SELECT bowler, over_id, ball_id, runs_scored, 1 FROM ball_by_ball \
@@ -148,6 +256,56 @@ app.get('/matches/:id', async(req, res) => {
         SELECT player_id, bowler, runs, wickets FROM bowler_scorecard \
         WHERE wickets > 0 \
         ORDER BY wickets DESC, runs ASC, bowler ASC \
+        LIMIT 3", [parseInt(req.params.id)]);
+
+        const innings1_score_extras = await pool.query("WITH bbb_team(over_id, ball_id, runs, extras, out_type, striker, team_id) AS \
+        (SELECT over_id, ball_id, (runs_scored + extra_runs) AS runs, extra_runs, out_type, striker, team_id \
+        FROM ball_by_ball, player_match WHERE striker=player_match.player_id AND player_match.match_id = ball_by_ball.match_id  \
+        AND ball_by_ball.match_id = $1 AND innings_no=1), \
+        ball_wicket(over_id, ball_id, runs, extras, wicket) AS \
+        (SELECT over_id, ball_id, runs, extras, 1 FROM bbb_team \
+        WHERE out_type IS NOT NULL \
+        UNION  \
+        SELECT over_id, ball_id, runs, extras, 0 FROM bbb_team \
+        WHERE out_type IS NULL) \
+        SELECT SUM(runs) as total, SUM(wicket) as wickets, SUM(extras) AS extras FROM ball_wicket", [parseInt(req.params.id)]);
+
+
+        const innings2_batting_summary = await pool.query("WITH bbb_team(match_id, over_id, ball_id, runs, player_id, team_id) AS \
+        (SELECT ball_by_ball.match_id, over_id, ball_id, runs_scored AS runs, striker, team_id \
+        FROM ball_by_ball, player_match WHERE striker=player_match.player_id AND player_match.match_id = ball_by_ball.match_id  \
+        AND ball_by_ball.match_id = $1 AND innings_no=2), \
+        playing_11(player_id) AS \
+        (SELECT DISTINCT player_match.player_id FROM player_match, bbb_team WHERE player_match.match_id = bbb_team.match_id \
+        AND player_match.team_id=(SELECT DISTINCT team_id FROM bbb_team)), \
+        player_balls(player_id, balls, over_id, ball_id) AS \
+        (SELECT bbb_team.player_id, COUNT(*), MIN(over_id), MIN(ball_id) FROM bbb_team \
+        GROUP BY bbb_team.player_id), \
+        player_runs(player_id, runs) AS \
+        (SELECT player_id, SUM(runs) FROM bbb_team \
+        GROUP BY player_id), \
+        player_fours(player_id, fours) AS \
+        (SELECT player_id, COUNT(*) FROM bbb_team \
+         WHERE runs=4 \
+        GROUP BY player_id), \
+        player_sixes(player_id, sixes) AS \
+        (SELECT player_id, COUNT(*) FROM bbb_team \
+         WHERE runs=6 \
+        GROUP BY player_id), \
+        scorecard(player_id, runs, fours, sixes, balls, over_id, ball_id) AS \
+        (SELECT playing_11.player_id, COALESCE(runs, 0), COALESCE(fours, 0), COALESCE(sixes, 0), COALESCE(balls, 0), COALESCE(over_id, 100), COALESCE(ball_id, 100) \
+         FROM playing_11 \
+         FULL OUTER JOIN player_balls ON (playing_11.player_id = player_balls.player_id) \
+         FULL OUTER JOIN player_fours ON (playing_11.player_id = player_fours.player_id) \
+         FULL OUTER JOIN player_runs ON (playing_11.player_id = player_runs.player_id) \
+         FULL OUTER JOIN player_sixes ON (playing_11.player_id = player_sixes.player_id) \
+        ), \
+        final_scorecard(player_id, player_name, runs, fours, sixes, balls) AS \
+        (SELECT player.player_id, player_name, runs, fours, sixes, balls FROM scorecard, player \
+        WHERE player.player_id = scorecard.player_id \
+        ORDER BY over_id, ball_id, player.player_id) \
+        SELECT player_id, player_name, runs, balls FROM final_scorecard \
+        ORDER BY runs DESC, balls ASC, player_name ASC \
         LIMIT 3", [parseInt(req.params.id)]);
 
         const innings2_bowler_summary = await pool.query("WITH bbb_wkts(bowler, over_id, ball_id, runs, wkt) AS \
@@ -169,16 +327,85 @@ app.get('/matches/:id', async(req, res) => {
         ORDER BY wickets DESC, runs ASC, bowler ASC \
         LIMIT 3", [parseInt(req.params.id)]);
 
+        const innings2_score_extras = await pool.query("WITH bbb_team(over_id, ball_id, runs, extras, out_type, striker, team_id) AS \
+        (SELECT over_id, ball_id, (runs_scored + extra_runs) AS runs, extra_runs, out_type, striker, team_id \
+        FROM ball_by_ball, player_match WHERE striker=player_match.player_id AND player_match.match_id = ball_by_ball.match_id  \
+        AND ball_by_ball.match_id = $1 AND innings_no=2), \
+        ball_wicket(over_id, ball_id, runs, extras, wicket) AS \
+        (SELECT over_id, ball_id, runs, extras, 1 FROM bbb_team \
+        WHERE out_type IS NOT NULL \
+        UNION  \
+        SELECT over_id, ball_id, runs, extras, 0 FROM bbb_team \
+        WHERE out_type IS NULL) \
+        SELECT SUM(runs) as total, SUM(wicket) as wickets, SUM(extras) AS extras FROM ball_wicket", [parseInt(req.params.id)]);
+
+
+        //pie chart
+        const pie_chart_innings1 = await pool.query("WITH bbb(over_id, ball_id, runs, extras) AS \
+        (SELECT over_id, ball_id, runs_scored, extra_runs FROM ball_by_ball \
+        WHERE match_id = $1 AND innings_no = 1), \
+        num_ones(ones) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=1), \
+        num_twos(twos) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=2), \
+        num_threes(threes) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=3), \
+        num_fours(fours) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=4), \
+        num_fives(fives) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=5), \
+        num_sixes(sixes) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=6), \
+        num_extras(extras) AS \
+        (SELECT SUM(extras) FROM bbb) \
+        SELECT COALESCE(ones, 0) as ones, COALESCE(twos, 0) as twos, COALESCE(threes, 0) as threes, COALESCE(fours, 0) as fours \
+        , COALESCE(fives, 0) as fives, COALESCE(sixes, 0) as sixes, COALESCE(extras, 0) as extras \
+        FROM num_ones, num_twos, num_threes, num_fours, num_fives, num_sixes, num_extras", [req.params.id]);
+
+        const pie_chart_innings2 = await pool.query("WITH bbb(over_id, ball_id, runs, extras) AS \
+        (SELECT over_id, ball_id, runs_scored, extra_runs FROM ball_by_ball \
+        WHERE match_id = $1 AND innings_no = 2), \
+        num_ones(ones) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=1), \
+        num_twos(twos) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=2), \
+        num_threes(threes) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=3), \
+        num_fours(fours) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=4), \
+        num_fives(fives) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=5), \
+        num_sixes(sixes) AS \
+        (SELECT SUM(runs) FROM bbb WHERE runs=6), \
+        num_extras(extras) AS \
+        (SELECT SUM(extras) FROM bbb) \
+        SELECT COALESCE(ones, 0) as ones, COALESCE(twos, 0) as twos, COALESCE(threes, 0) as threes, COALESCE(fours, 0) as fours \
+        , COALESCE(fives, 0) as fives, COALESCE(sixes, 0) as sixes, COALESCE(extras, 0) as extras \
+        FROM num_ones, num_twos, num_threes, num_fours, num_fives, num_sixes, num_extras", [req.params.id]);
+
+
         res.json({
             innings1_progress: innings1_progress.rows,
             innings2_progress: innings2_progress.rows,
+
             match_info_without_11: match_info_without_11.rows,
             playing_11_team1: playing_11_team1.rows,
             playing_11_team2: playing_11_team2.rows,
+
+            innings1_batting: innings1_batting.rows,
             innings1_bowling: innings1_bowling.rows,
+            innings2_batting: innings2_batting.rows,
             innings2_bowling: innings2_bowling.rows,
+
+            innings1_batting_summary: innings1_batting_summary.rows,
             innings1_bowler_summary: innings1_bowler_summary.rows,
-            innings2_bowler_summary: innings2_bowler_summary.rows
+            innings1_score_extras: innings1_score_extras.rows,
+            innings2_batting_summary: innings2_batting_summary.rows,
+            innings2_bowler_summary: innings2_bowler_summary.rows,
+            innings2_score_extras: innings2_score_extras.rows,
+
+            pie_chart_innings1: pie_chart_innings1.rows,
+            pie_chart_innings2: pie_chart_innings2.rows
         });
         
     } catch (err) {
