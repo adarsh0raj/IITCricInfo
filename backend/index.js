@@ -628,6 +628,22 @@ app.get('/venues/:id', async(req, res) => {
     }
 });
 
+app.post('/venues/add', async(req, res) => {
+    try {
+        var venue_name = req.body.venue_name;
+        var country_name = req.body.country_name;
+        var city_name = req.body.city_name;
+        var capacity = req.body.capacity;
+
+        const query_response = await pool.query("INSERT INTO venue (venue_name, city_name, country_name, capacity) \
+        VALUES ($1, $2, $3, $4) RETURNING 1", [venue_name, country_name, city_name, capacity]);
+
+        res.json(query_response.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
 app.listen(3000, (req, res) => {
     console.log('Node Server is running on port 3000');
 });
