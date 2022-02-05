@@ -1,0 +1,54 @@
+<div class="start container venuedetail-div">
+    <h2>Venue Details</h2>
+    <br>
+    <br>
+    <ul>
+        <li>Venue Name: {{venueDetails.venue_name}}</li>
+        <li>Address: {{venueDetails.address}}</li>
+        <li>Capacity: {{venueDetails.capacity}}</li>
+        <li>Matches Played: {{venueDetails.matches}}</li>
+        <li>Highest Score Recorded: {{venueDetails.highest_rec}}</li>
+        <li>Lowest Score Recorded: {{venueDetails.lowest_rec}}</li>
+        <li>Highest Score Chased by a team: {{venueDetails.highest_chased}}</li>
+        <li>Matches won (Bat): {{venueDetails.matches_won_bat}} percent</li>
+        <li>Matches won (Bowl): {{venueDetails.matches_won_bowl}} percent</li>
+        <li>Matches draw: {{venueDetails.matches_draw}} percent</li>
+    </ul>
+
+    <br>
+    <br>
+
+    <p>
+        <a class='btn btn-default' (click)="goBack()">Back </a>
+    </p> 
+
+</div>
+
+<br>
+<br>
+
+<div class="pie-chart">
+    <h2>Pie Chart</h2>
+    <div>
+      <canvas
+                baseChart
+              [data]="pieChartData"
+              [type]="pieChartType"
+              [options]="pieChartOptions"
+              [plugins]="pieChartPlugins">
+      </canvas>
+    </div>
+</div>
+
+<div class="line-chart">
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [xaxis]="chartOptions.xaxis"
+      [dataLabels]="chartOptions.dataLabels"
+      [markers]="chartOptions.markers"
+      [grid]="chartOptions.grid"
+      [stroke]="chartOptions.stroke"
+      [title]="chartOptions.title"
+    ></apx-chart>
+  </div>

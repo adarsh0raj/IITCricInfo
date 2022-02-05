@@ -1,0 +1,202 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body">
+        <h1>
+          <span class="text-white">Match Details: {{match.innings1_progress[0].team_name}} Vs {{match.innings2_progress[0].team_name}}</span>
+        </h1>
+      </div>
+    </div>
+</div>
+<!-- Main content -->
+<div class="start container">
+    <div class="score-section">
+        <h1>Score Card</h1>
+        <div class="first-inning">
+            <div class="bat">
+                <h3>First Inning: {{match.innings1_progress[0].team_name}} Batting First</h3>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Batter</th>
+                            <th>Runs</th>
+                            <th>Fours</th>
+                            <th>Sixes</th>
+                            <th>Balls Faced</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let batter of match.innings1_batting">
+                            <td>
+                                <a routerLink="/players/{{batter.player_id}}" routerLinkActive="active">{{batter.player_name}}</a>
+                            </td>
+                            <td>{{batter.runs}}</td>
+                            <td>{{batter.fours}}</td>
+                            <td>{{batter.sixes}}</td>
+                            <td>{{batter.balls}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="extra-info">
+                Total Runs Scored: {{match.innings1_score_extras[0].total}}<br>
+                Extras: {{match.innings1_score_extras[0].extras}}<br>
+                Wickets: {{match.innings1_score_extras[0].wickets}}<br>
+            </div>
+
+            <div class="ball">
+                <h3>First Inning: {{match.innings2_progress[0].team_name}} Bowling First</h3>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Bowler</th>
+                            <th>Balls Bowled</th>
+                            <th>Runs Given</th>
+                            <th>Wickets Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let b of match.innings1_bowling">
+                            <td>
+                                <a routerLink="/players/{{b.player_id}}" routerLinkActive="active">{{b.bowler}}</a>
+                            </td>
+                            <td>{{b.balls}}</td>
+                            <td>{{b.runs}}</td>
+                            <td>{{b.wickets}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>   
+        </div>
+        <br>
+        <br>
+
+        <div class="second-inning">
+            <div class="bat">
+                <h3>Second Inning: {{match.innings2_progress[0].team_name}} Batting</h3>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Batter</th>
+                            <th>Runs</th>
+                            <th>Fours</th>
+                            <th>Sixes</th>
+                            <th>Balls Faced</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let batter of match.innings2_batting">
+                            <td>
+                                <a routerLink="/players/{{batter.player_id}}" routerLinkActive="active">{{batter.player_name}}</a>
+                            </td>
+                            <td>{{batter.runs}}</td>
+                            <td>{{batter.fours}}</td>
+                            <td>{{batter.sixes}}</td>
+                            <td>{{batter.balls}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="extra-info">
+                Total Runs Scored: {{match.innings2_score_extras[0].total}}<br>
+                Extras: {{match.innings2_score_extras[0].extras}}<br>
+                Wickets: {{match.innings2_score_extras[0].wickets}}<br>
+            </div>
+
+            <div class="ball">
+                <h3>Second Inning: {{match.innings1_progress[0].team_name}} Bowling</h3>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Bowler</th>
+                            <th>Balls Bowled</th>
+                            <th>Runs Given</th>
+                            <th>Wickets Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let b of match.innings2_bowling">
+                            <td>
+                                <a routerLink="/players/{{b.player_id}}" routerLinkActive="active">{{b.bowler}}</a>
+                            </td>
+                            <td>{{b.balls}}</td>
+                            <td>{{b.runs}}</td>
+                            <td>{{b.wickets}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>   
+        </div>
+    </div>  
+
+    <div class="info-section">
+        <h2>Additional Match Info</h2>
+        <ul>
+            <li>Match Id: {{match.match_info_without_11[0].match_id}}</li>
+            <li>Teams: {{match.match_info_without_11[0].team1}} VS {{match.match_info_without_11[0].team2}}</li>
+            <li>Season Year: {{match.match_info_without_11[0].season_year}}</li>
+            <li>Toss Winner: {{match.match_info_without_11[0].toss_winner}} won and chose to {{match.match_info_without_11[0].toss_name}} first</li>
+            <li>Venue Name:  {{match.match_info_without_11[0].venue_name}}</li>
+            <li>Umpire Name:  {{match.match_info_without_11[0].umpire_name}}</li>
+            <li> Playing Eleven of Team1
+                <ol>
+                    <li *ngFor="let player of match.playing_11_team1">
+                        {{player.player_name}}
+                    </li>
+                </ol>
+            </li>
+            <li> Playing Eleven of Team2
+                <ol>
+                    <li *ngFor="let player of match.playing_11_team2">
+                        {{player.player_name}}
+                    </li>
+                </ol>
+            </li>
+        </ul>
+    </div>
+
+    <div class="progress-section">
+        <div id="chart">
+            <apx-chart
+              [series]="chartOptions.series"
+              [chart]="chartOptions.chart"
+              [xaxis]="chartOptions.xaxis"
+              [stroke]="chartOptions.stroke"
+              [colors]="chartOptions.colors"
+              [dataLabels]="chartOptions.dataLabels"
+              [legend]="chartOptions.legend"
+              [markers]="chartOptions.markers"
+              [grid]="chartOptions.grid"
+              [yaxis]="chartOptions.yaxis"
+              [title]="chartOptions.title"
+            ></apx-chart>
+          </div>
+    </div>
+
+    <!-- To DO MAtch summary section -->
+
+    <div class="pie-chart1">
+        <div id="pie-chart">
+            <apx-chart
+              [series]="piechartOptions.series"
+              [chart]="piechartOptions.chart"
+              [labels]="piechartOptions.labels"
+              [title]="piechartOptions.title"
+              [responsive]="piechartOptions.responsive"
+            ></apx-chart>
+        </div>
+    </div>
+
+    <div class="pie-chart2">
+        <div id="pie-chart">
+            <apx-chart
+              [series]="piechartOptions2.series"
+              [chart]="piechartOptions2.chart"
+              [labels]="piechartOptions2.labels"
+              [title]="piechartOptions2.title"
+              [responsive]="piechartOptions2.responsive"
+            ></apx-chart>
+        </div>
+    </div>
+</div>
