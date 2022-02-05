@@ -1,13 +1,298 @@
 <div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
     <div class="container-fluid">
       <div class="header-body">
-        <h1>
-          <span class="text-white">Match Details: {{match.innings1_progress[0].team_name}} Vs {{match.innings2_progress[0].team_name}}</span>
-        </h1>
+        <h2>
+          <span class="text-white">{{match.innings1_progress[0].team_name}} Vs {{match.innings2_progress[0].team_name}} ({{match.full_info.season_year}})</span>
+        </h2>
+        <h4>
+            <span class="text-white"> {{match.full_info.winner}} Won By {{match.full_info.win_margin}} {{match.full_info.win_type}}</span>
+        </h4>
+
+        <!-- Card stats -->
+        <div class="row" style="margin-top: 1rem;">
+            <div class="col-xl-3 col-lg-6">
+              <div class="card card-stats mb-4 mb-xl-0">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Score Card</h5>
+                      <span class="h6 font-weight-bold mb-0">Summary</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                        <i class="fas fa-chart-bar"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+                <div class="card card-stats mb-4 mb-xl-0">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Score Comparison</h5>
+                        <span class="h6 font-weight-bold mb-0">Over By Over Chart</span>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                          <i class="fas fa-chart-bar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-6">
+                <div class="card card-stats mb-4 mb-xl-0">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Match Summary</h5>
+                        <span class="h6 font-weight-bold mb-0">Overall</span>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                          <i class="fas fa-chart-bar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
       </div>
     </div>
 </div>
 <!-- Main content -->
+
+<div class="container-fluid mt--7" style="margin-top:-5rem !important;">
+    <!-- Table -->
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">First Inning: {{match.innings1_progress[0].team_name}} Batting First</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                    <th scope="col">Batter</th>
+                    <th scope="col">Runs</th>
+                    <th scope="col">Fours</th>
+                    <th scope="col">Sixes</th>
+                    <th scope="col">Balls Faced</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let batter of match.innings1_batting">
+                    <th scope="row">
+                        <a routerLink="/players/{{batter.player_id}}" routerLinkActive="active">{{batter.player_name}}</a>
+                    </th>
+                    <td>{{batter.runs}}</td>
+                    <td>{{batter.fours}}</td>
+                    <td>{{batter.sixes}}</td>
+                    <td>{{batter.balls}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 1rem;">
+        <div class="col">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-auto">
+                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                </div>
+                <div class="col">
+                    <h4>Total Runs Scored: {{match.innings1_score_extras[0].total}}</h4>
+                    <h5>Extra Runs: {{match.innings1_score_extras[0].extras}}</h5>
+                    <h5>Wickets: {{match.innings1_score_extras[0].wickets}}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row"  style="margin-top: 1rem;">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <h3 class="mb-0">First Inning: {{match.innings2_progress[0].team_name}} Bowling First</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Bowler</th>
+                    <th scope="col">Balls Bowled</th>
+                    <th scope="col">Runs Given</th>
+                    <th scope="col">Wickets Taken</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let b of match.innings1_bowling">
+                        <th scope="row">
+                            <a routerLink="/players/{{b.player_id}}" routerLinkActive="active">{{b.bowler}}</a>
+                        </th>
+                        <td>{{b.balls}}</td>
+                        <td>{{b.runs}}</td>
+                        <td>{{b.wickets}}</td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--7" style="margin-top: 2rem !important;">
+    <!-- Table -->
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Second Inning: {{match.innings2_progress[0].team_name}} Batting</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                    <th scope="col">Batter</th>
+                    <th scope="col">Runs</th>
+                    <th scope="col">Fours</th>
+                    <th scope="col">Sixes</th>
+                    <th scope="col">Balls Faced</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let batter of match.innings2_batting">
+                    <th scope="row">
+                        <a routerLink="/players/{{batter.player_id}}" routerLinkActive="active">{{batter.player_name}}</a>
+                    </th>
+                    <td>{{batter.runs}}</td>
+                    <td>{{batter.fours}}</td>
+                    <td>{{batter.sixes}}</td>
+                    <td>{{batter.balls}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 1rem;">
+        <div class="col">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-auto">
+                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                </div>
+                <div class="col">
+                    <h4>Total Runs Scored: {{match.innings2_score_extras[0].total}}</h4>
+                    <h5>Extra Runs: {{match.innings2_score_extras[0].extras}}</h5>
+                    <h5>Wickets: {{match.innings2_score_extras[0].wickets}}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row"  style="margin-top: 1rem;">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <h3 class="mb-0">Second Inning: {{match.innings1_progress[0].team_name}} Bowling</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Bowler</th>
+                    <th scope="col">Balls Bowled</th>
+                    <th scope="col">Runs Given</th>
+                    <th scope="col">Wickets Taken</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let b of match.innings2_bowling">
+                        <th scope="row">
+                            <a routerLink="/players/{{b.player_id}}" routerLinkActive="active">{{b.bowler}}</a>
+                        </th>
+                        <td>{{b.balls}}</td>
+                        <td>{{b.runs}}</td>
+                        <td>{{b.wickets}}</td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--7" style="margin-top: 2rem !important;">
+    <!-- Table -->
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Match Information</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                      <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Match</th>
+                            <td scope="col"></th>
+                            <td scope="col">Fours</th>
+                            <td scope="col">Sixes</th>
+                            <td scope="col">Balls Faced</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let batter of match.innings2_batting">
+                            <th scope="row">
+                                <a routerLink="/players/{{batter.player_id}}" routerLinkActive="active">{{batter.player_name}}</a>
+                            </th>
+                            <td>{{batter.runs}}</td>
+                            <td>{{batter.fours}}</td>
+                            <td>{{batter.sixes}}</td>
+                            <td>{{batter.balls}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+
 <div class="start container">
     <div class="score-section">
         <h1>Score Card</h1>

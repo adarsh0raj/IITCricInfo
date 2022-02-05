@@ -202,12 +202,23 @@ export class MatchdetailComponent implements OnInit {
         this.chartOptions.series[1].data = this.match.innings2_progress.map(innings => innings.runs);
 
         //Pie Chart Data
+        var temp1 = [this.match.pie_chart_innings1[0].ones, this.match.pie_chart_innings1[0].twos, this.match.pie_chart_innings1[0].threes, this.match.pie_chart_innings1[0].fours, this.match.pie_chart_innings1[0].sixes, this.match.pie_chart_innings1[0].extras];
+        var temp2 = [this.match.pie_chart_innings2[0].ones, this.match.pie_chart_innings2[0].twos, this.match.pie_chart_innings2[0].threes, this.match.pie_chart_innings2[0].fours, this.match.pie_chart_innings2[0].sixes, this.match.pie_chart_innings2[0].extras];
 
-        this.piechartOptions.series = [this.match.pie_chart_innings1[0].ones, this.match.pie_chart_innings1[0].twos, this.match.pie_chart_innings1[0].threes, this.match.pie_chart_innings1[0].fours, this.match.pie_chart_innings1[0].sixes, this.match.pie_chart_innings1[0].extras];
-        this.piechartOptions2.series = [this.match.pie_chart_innings2[0].ones, this.match.pie_chart_innings2[0].twos, this.match.pie_chart_innings2[0].threes, this.match.pie_chart_innings2[0].fours, this.match.pie_chart_innings2[0].sixes, this.match.pie_chart_innings2[0].extras];
+        const sum1 = Number(this.match.pie_chart_innings1[0].ones) + Number(this.match.pie_chart_innings1[0].twos) + Number(this.match.pie_chart_innings1[0].threes) + Number(this.match.pie_chart_innings1[0].fours) + Number(this.match.pie_chart_innings1[0].sixes) + Number(this.match.pie_chart_innings1[0].extras);
+        const sum2 = Number(this.match.pie_chart_innings2[0].ones) + Number(this.match.pie_chart_innings2[0].twos) + Number(this.match.pie_chart_innings2[0].threes) + Number(this.match.pie_chart_innings2[0].fours) + Number(this.match.pie_chart_innings2[0].sixes) + Number(this.match.pie_chart_innings2[0].extras);
+
+        for (let i = 0; i < temp1.length; i++) {
+          temp1[i] = (Number(temp1[i])*100) / sum1;
+        }
+
+        for (let i = 0; i < temp2.length; i++) {
+          temp2[i] = (Number(temp2[i])*100)/ sum2;
+        }
+
+        this.piechartOptions.series = temp1;
+        this.piechartOptions2.series = temp2;
         
-        console.log(this.piechartOptions);
-        console.log(this.piechartOptions2);
       });
     });
   }

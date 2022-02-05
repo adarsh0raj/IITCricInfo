@@ -30,6 +30,15 @@ export class NavbarComponent implements OnInit {
             return this.listTitles[item].title;
         }
     }
+
+    if (titlee.includes("pointstable")){
+      return 'Points Table';
+    }
+
+    if (titlee.includes("matches")) {
+      return 'Match Details';
+    }
+    
     return 'Dashboard';
   }
 

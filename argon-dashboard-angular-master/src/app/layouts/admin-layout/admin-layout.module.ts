@@ -18,6 +18,7 @@ import { MatchdetailComponent } from 'src/app/pages/matchdetail/matchdetail.comp
 import { VenueComponent } from 'src/app/pages/venue/venue.component';
 import { VenuedetailComponent } from 'src/app/pages/venuedetail/venuedetail.component';
 import { PointsComponent } from 'src/app/pages/points/points.component';
+import { SeasonyearComponent } from 'src/app/pages/seasonyear/seasonyear.component';
 // import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
@@ -40,7 +41,8 @@ import { PointsComponent } from 'src/app/pages/points/points.component';
     MatchdetailComponent,
     VenueComponent,
     VenuedetailComponent,
-    PointsComponent
+    PointsComponent,
+    SeasonyearComponent
   ]
 })
 

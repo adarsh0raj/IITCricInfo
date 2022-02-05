@@ -9,6 +9,7 @@ import { MatchdetailComponent } from '../../pages/matchdetail/matchdetail.compon
 import { VenueComponent } from 'src/app/pages/venue/venue.component';
 import { VenuedetailComponent } from 'src/app/pages/venuedetail/venuedetail.component';
 import { PointsComponent } from 'src/app/pages/points/points.component';
+import { SeasonyearComponent } from 'src/app/pages/seasonyear/seasonyear.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',      component: DashboardComponent },
@@ -19,6 +20,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'matches/:id',    component: MatchdetailComponent },
     { path: 'venues',         component: VenueComponent },
     { path: 'venues/:id',     component: VenuedetailComponent },
-    { path: 'pointstable',    component: PointsComponent },
+    { path: 'pointstable',    component: SeasonyearComponent },
     { path: 'pointstable/:id',component: PointsComponent }
 ];
