@@ -1,0 +1,159 @@
+<div class="header bg-gradient-warning pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body">
+        <h2>
+          <span class="text-white">Player Details</span>
+        </h2>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container-fluid mt--7" style="margin-top:-5rem !important;">
+    <!-- Table -->
+    <div class="row">
+      <div class="col">
+        <div class="card bg-default shadow">
+          <div class="card-header bg-transparent border-0">
+            <h3 class="text-white mb-0">Basic Information</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-dark table-flush" style="font-size: 1.5rem;">
+              <tbody>
+                <tr>
+                  <th scope="col">Player Name</th>
+                  <td scope="col">{{playerDetails.player_name}}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Country</th>
+                  <td>{{playerDetails.country_name}}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Batting Skill</th>
+                  <td>{{playerDetails.batting_skill}}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Bowling Skill</th>
+                    <td>{{playerDetails.bowling_skill}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row"  style="margin-top: 2rem;">
+      <div class="col">
+        <div class="card bg-default shadow">
+            <div class="card-header bg-transparent border-0">
+                <h3 class="text-white mb-0">Player Batting Statistics</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-items-center table-dark table-flush" style="font-size: 1.5rem;">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Matches Played</th>
+                            <th scope="col">Runs</th>
+                            <th scope="col">Fours</th>
+                            <th scope="col">Sixes</th>
+                            <th scope="col">Fifties</th>
+                            <th scope="col">Highest Score</th>
+                            <th scope="col">Strike Rate</th>
+                            <th scope="col">Average</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">{{playerDetails.matches_bat}}</th>
+                            <td>{{playerDetails.runs_bat}}</td>
+                            <td>{{playerDetails.fours}}</td>
+                            <td>{{playerDetails.sixes}}</td>
+                            <td>{{playerDetails.fifties}}</td>
+                            <td>{{playerDetails.highest}}</td>
+                            <td>{{playerDetails.strike_rate}}</td>
+                            <td>{{playerDetails.batting_avg}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row"  style="margin-top: 2rem;"  *ngIf="matchesPlayedNotZero" >
+        <div class="col">
+          <div class="card shadow">
+              <div class="card-header border-0">
+                  <h3 class="mb-0">Runs Scored vs Match</h3>
+              </div>
+              <div class="bar-chart" style="display: block; width: 600px; height: 500px; margin: 35px auto;">
+                <canvas baseChart
+                  [data]="barChartData"
+                  [options]="barChartOptions"
+                  [plugins]="barChartPlugins"
+                  [type]="barChartType"
+                >
+                </canvas>
+            </div>
+          </div>
+        </div>
+    </div>
+  
+    <div class="row"  style="margin-top: 2rem;">
+        <div class="col">
+          <div class="card bg-default shadow">
+              <div class="card-header bg-transparent border-0">
+                  <h3 class="text-white mb-0">Player Bowling Statistics</h3>
+              </div>
+              <div class="table-responsive">
+                  <table class="table align-items-center table-dark table-flush" style="font-size: 1.5rem;">
+                      <thead class="thead-dark">
+                          <tr>
+                              <th scope="col">Matches</th>
+                              <th scope="col">Runs</th>
+                              <th scope="col">Balls</th>
+                              <th scope="col">Overs</th>
+                              <th scope="col">Wickets</th>
+                              <th scope="col">Economy</th>
+                              <th scope="col">Five Wicket Hauls</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <th scope="row">{{playerDetails.matches_bowled}}</th>
+                              <td>{{playerDetails.runs_conceded}}</td>
+                              <td>{{playerDetails.balls_bowled}}</td>
+                              <td>{{playerDetails.overs_bowled}}</td>
+                              <td>{{playerDetails.wickets_taken}}</td>
+                              <td>{{playerDetails.economy}}</td>
+                              <td>{{playerDetails.five_wicket_hauls}}</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 2rem;"  *ngIf="matchesBowledNotZero">
+        <div class="col">
+          <div class="card shadow">
+              <div class="card-header border-0">
+                  <h3 class="mb-0">Runs Scored vs Match</h3>
+              </div>
+              <div class="mixed-chart" style="display: block">
+                <apx-chart
+                    [series]="chartOptions.series"
+                    [chart]="chartOptions.chart"
+                    [yaxis]="chartOptions.yaxis"
+                    [xaxis]="chartOptions.xaxis"
+                    [labels]="chartOptions.labels"
+                    [stroke]="chartOptions.stroke"
+                    [title]="chartOptions.title"
+                    [dataLabels]="chartOptions.dataLabels"
+                ></apx-chart>
+            </div>
+          </div>
+        </div>
+    </div>
+
+</div>

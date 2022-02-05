@@ -1,54 +1,98 @@
-<div class="start container venuedetail-div">
-    <h2>Venue Details</h2>
-    <br>
-    <br>
-    <ul>
-        <li>Venue Name: {{venueDetails.venue_name}}</li>
-        <li>Address: {{venueDetails.address}}</li>
-        <li>Capacity: {{venueDetails.capacity}}</li>
-        <li>Matches Played: {{venueDetails.matches}}</li>
-        <li>Highest Score Recorded: {{venueDetails.highest_rec}}</li>
-        <li>Lowest Score Recorded: {{venueDetails.lowest_rec}}</li>
-        <li>Highest Score Chased by a team: {{venueDetails.highest_chased}}</li>
-        <li>Matches won (Bat): {{venueDetails.matches_won_bat}} percent</li>
-        <li>Matches won (Bowl): {{venueDetails.matches_won_bowl}} percent</li>
-        <li>Matches draw: {{venueDetails.matches_draw}} percent</li>
-    </ul>
-
-    <br>
-    <br>
-
-    <p>
-        <a class='btn btn-default' (click)="goBack()">Back </a>
-    </p> 
-
-</div>
-
-<br>
-<br>
-
-<div class="pie-chart">
-    <h2>Pie Chart</h2>
-    <div>
-      <canvas
-                baseChart
-              [data]="pieChartData"
-              [type]="pieChartType"
-              [options]="pieChartOptions"
-              [plugins]="pieChartPlugins">
-      </canvas>
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <h2>
+        <span class="text-white">Venue Details</span>
+      </h2>
     </div>
+  </div>
 </div>
 
-<div class="line-chart">
-    <apx-chart
-      [series]="chartOptions.series"
-      [chart]="chartOptions.chart"
-      [xaxis]="chartOptions.xaxis"
-      [dataLabels]="chartOptions.dataLabels"
-      [markers]="chartOptions.markers"
-      [grid]="chartOptions.grid"
-      [stroke]="chartOptions.stroke"
-      [title]="chartOptions.title"
-    ></apx-chart>
+<div class="container-fluid mt--7" style="margin-top:-5rem !important;">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-4">Basic Information</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush" style="font-size: 1.5rem;">
+            <tbody>
+              <tr>
+                <th scope="col">Venue Name</th>
+                <td scope="col">{{venueDetails.venue_name}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Address</th>
+                <td>{{venueDetails.address}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Capacity</th>
+                <td>{{venueDetails.capacity}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Matches Played</th>
+                <td>{{venueDetails.matches}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Highest Score Recorded</th>
+                <td>{{venueDetails.highest_rec}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Lowest Score Recorded</th>
+                <td>{{venueDetails.lowest_rec}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Highest Score Chased</th>
+                <td>{{venueDetails.highest_chased}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
+  <div class="row"  style="margin-top: 2rem;">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-4">Outlines of matches held</h3>
+        </div>
+        <div id="pie-chart" class="pie-chart" style="margin-top: -1.5rem;">
+          <apx-chart
+            [series]="piechartOptions.series"
+            [chart]="piechartOptions.chart"
+            [labels]="piechartOptions.labels"
+            [title]="piechartOptions.title"
+            [legend]="piechartOptions.legend"
+            [responsive]="piechartOptions.responsive"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row"  style="margin-top: 2rem;">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-4">Average First Innings Score</h3>
+        </div>
+        <div class="line-chart">
+          <apx-chart
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [xaxis]="chartOptions.xaxis"
+            [dataLabels]="chartOptions.dataLabels"
+            [markers]="chartOptions.markers"
+            [grid]="chartOptions.grid"
+            [stroke]="chartOptions.stroke"
+            [title]="chartOptions.title"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

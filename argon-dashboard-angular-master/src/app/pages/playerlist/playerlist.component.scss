@@ -1,0 +1,15 @@
+ul {
+    -moz-column-count: 5 !important;
+    -moz-column-gap: 20px  !important;
+    -webkit-column-count: 5  !important;
+    -webkit-column-gap: 20px  !important;
+    column-count: 5 !important;
+    column-gap: 20px  !important;
+    color: grey;
+    margin-right: 2px;
+    line-height: 1.5rem;
+}
+
+li:not(:last-child) {
+    margin-bottom: 5px;
+}

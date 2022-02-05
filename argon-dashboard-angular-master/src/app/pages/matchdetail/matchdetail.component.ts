@@ -42,6 +42,11 @@ export type PieChartOptions = {
   labels: any;
 };
 
+export type players_11 = {
+  team1_player: string;
+  team2_player: string;
+};
+
 @Component({
   selector: 'app-matchdetail',
   templateUrl: './matchdetail.component.html',
@@ -53,6 +58,7 @@ export class MatchdetailComponent implements OnInit {
 
   match!: match_detail;
   id!: any;
+  playing_11: players_11[] = [];
 
   //line chart vars
 
@@ -68,7 +74,7 @@ export class MatchdetailComponent implements OnInit {
       }
     ],
     chart: {
-      height: 350,
+      height: 400,
       type: "line",
       dropShadow: {
         enabled: true,
@@ -186,6 +192,33 @@ export class MatchdetailComponent implements OnInit {
     this.getMatchDetails();
   }
 
+  scorecard() {
+    document.getElementById("score-modal").style.display = "block";
+    document.getElementById("chart-modal").style.display="none";
+    document.getElementById("summary-modal").style.display = "none";
+    document.getElementById("card-btn").classList.add("active");
+    document.getElementById("chart-btn").classList.remove("active");
+    document.getElementById("summary-btn").classList.remove("active");
+  }
+
+  scorecomp(){
+    document.getElementById("score-modal").style.display = "none";
+    document.getElementById("chart-modal").style.display="block";
+    document.getElementById("summary-modal").style.display = "none";
+    document.getElementById("card-btn").classList.remove("active");
+    document.getElementById("chart-btn").classList.add("active");
+    document.getElementById("summary-btn").classList.remove("active");
+  }
+
+  summary() {
+    document.getElementById("score-modal").style.display = "none";
+    document.getElementById("chart-modal").style.display="none";
+    document.getElementById("summary-modal").style.display = "block";
+    document.getElementById("card-btn").classList.remove("active");
+    document.getElementById("chart-btn").classList.remove("active");
+    document.getElementById("summary-btn").classList.add("active");
+  }
+
   getMatchDetails() {
     this.activatedRoute.paramMap.subscribe(params => {
       console.log(params);
@@ -218,6 +251,14 @@ export class MatchdetailComponent implements OnInit {
 
         this.piechartOptions.series = temp1;
         this.piechartOptions2.series = temp2;
+
+        // Players Table Data
+        for (let i = 0; i < this.match.playing_11_team1.length; i++) {
+          this.playing_11.push({
+            "team1_player": this.match.playing_11_team1[i].player_name,
+            "team2_player": this.match.playing_11_team2[i].player_name
+          });
+        }
         
       });
     });

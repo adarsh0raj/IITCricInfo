@@ -7,6 +7,13 @@ export interface venue {
     matches_played: number;
 }
 
+export interface venue_without_id {
+    venue_name: string;
+    city_name: string;
+    country_name: string;
+    capacity: number;
+}
+
 export interface innings_score {
     season_year: number;
     score: number;

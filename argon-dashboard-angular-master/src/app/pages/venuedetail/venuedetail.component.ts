@@ -2,19 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { Router,ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
-import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
-
 import {
   ChartComponent,
   ApexAxisChartSeries,
+  ApexNonAxisChartSeries,
   ApexChart,
   ApexXAxis,
   ApexDataLabels,
   ApexTitleSubtitle,
   ApexStroke,
   ApexGrid,
-  ApexMarkers
+  ApexMarkers,
+  ApexResponsive,
+  ApexLegend
 } from "ng-apexcharts";
 
 export type ChartOptions = {
@@ -26,6 +26,15 @@ export type ChartOptions = {
   stroke: ApexStroke;
   markers: ApexMarkers;
   title: ApexTitleSubtitle;
+};
+
+export type PieChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  title: ApexTitleSubtitle;
+  legend: ApexLegend;
+  labels: any;
 };
 
 import { venue_details } from '../../interfaces/venue';
@@ -44,29 +53,33 @@ export class VenuedetailComponent implements OnInit {
 
   //Pie chart
 
-  public pieChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-      },
-      datalabels: {
-        formatter: (value, ctx) => {
-          if (ctx.chart.data.labels) {
-            return ctx.chart.data.labels[ctx.dataIndex];
+  public piechartOptions: PieChartOptions = {
+    series: [],
+    chart: {
+      width: 480,
+      type: "pie"
+    },
+    labels: ["Team batting First Won", "Team batting Second Won", "Draw"],
+    title: {
+      text: "Pie Chart for Venue Match Stats",
+    },
+    legend: {
+      position: "bottom"
+    },
+    responsive: [
+      {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: "bottom"
+            }
           }
-        },
-      },
-    }
+      }
+    ]
   };
-  public pieChartData: ChartData<'pie', number[], string | string[]> = {
-    labels: [ 'Team batting 1st won', 'Team batting 2nd won', 'Draw' ],
-    datasets: []
-  };
-  public pieChartType: ChartType = 'pie';
-  public pieChartPlugins = [ DatalabelsPlugin ];
 
   // Line Chart
 
@@ -78,7 +91,8 @@ export class VenuedetailComponent implements OnInit {
       }
     ],
     chart: {
-      height: 350,
+      height: 400,
+      width: 800,
       type: "line",
       zoom: {
         enabled: false
@@ -129,9 +143,7 @@ export class VenuedetailComponent implements OnInit {
 
         // Pie Chart Data
         
-        this.pieChartData.datasets = [
-          { data: [this.venueDetails.matches_won_bat, this.venueDetails.matches_won_bowl],
-        }];
+        this.piechartOptions.series = [this.venueDetails.matches_won_bat, this.venueDetails.matches_won_bowl, this.venueDetails.matches_draw];
 
         // Line Chart Data
         this.chartOptions.xaxis.categories = this.venueDetails.avg_first_innings_score.map(x => x.season_year.toString());

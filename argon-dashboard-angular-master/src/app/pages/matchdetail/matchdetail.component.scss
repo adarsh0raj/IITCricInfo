@@ -1,5 +1,4 @@
 #chart {
-    max-width: 650px;
     margin: 35px auto;
 }
 
@@ -8,4 +7,18 @@
     margin: 35px auto;
     padding: 0;
 }
+
+.active{
+    transform: scale(1.15);
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#card-btn, 
+#chart-btn,
+#summary-btn {
+    cursor: pointer;
+}
+
+
   

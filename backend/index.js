@@ -428,7 +428,7 @@ app.get('/teams', async(req, res) => {
 
 app.get('/players', async(req, res) => {
     try {
-        const players = await pool.query('SELECT * FROM player');
+        const players = await pool.query('SELECT player_id, player_name FROM player');
         res.json(players.rows);
     } catch (err) {
         console.error(err.message);

@@ -39,6 +39,14 @@ export class NavbarComponent implements OnInit {
       return 'Match Details';
     }
     
+    if (titlee.includes("venues")) {
+      return 'Venue Details';
+    }
+
+    if (titlee.includes("players")) {
+      return 'Player Details';
+    }
+    
     return 'Dashboard';
   }
 
