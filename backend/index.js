@@ -618,6 +618,26 @@ app.get('/venues/:id', async(req, res) => {
             highest_chased.rows[0].total = 0;
         }
 
+        if (highest_rec.rows[0].max === null) {
+            highest_rec.rows[0].max = 0;
+        }
+
+        if (lowest_rec.rows[0].min === null) {
+            lowest_rec.rows[0].min = 0;
+        }
+        var mwb, mlb, md;
+
+        if(matches.rows[0].count == 0) {
+            mwb = 0;
+            mlb = 0;
+            md = 0;
+        }
+        else {
+            mwb = (matches_won_bat.rows[0].count / matches.rows[0].count) * 100;
+            mlb = (matches_won_bowl.rows[0].count / matches.rows[0].count) * 100;
+            md = (matches_draw.rows[0].count / matches.rows[0].count) * 100;
+        }
+
         res.json({
             venue_id: venue.rows[0].venue_id,
             venue_name: venue.rows[0].venue_name,
@@ -627,9 +647,9 @@ app.get('/venues/:id', async(req, res) => {
             highest_rec: parseInt(highest_rec.rows[0].max),
             lowest_rec: parseInt(lowest_rec.rows[0].min),
             highest_chased: parseInt(highest_chased.rows[0].total),
-            matches_won_bat: parseInt(matches_won_bat.rows[0].count)/parseInt(matches.rows[0].count)*100,
-            matches_won_bowl: parseInt(matches_won_bowl.rows[0].count)/parseInt(matches.rows[0].count)*100,
-            matches_draw: parseInt(matches_draw.rows[0].count)/parseInt(matches.rows[0].count)*100,
+            matches_won_bat: mwb,
+            matches_won_bowl: mlb,
+            matches_draw: md,
             avg_first_innings_score: avg_first_innings_score.rows
         });
 

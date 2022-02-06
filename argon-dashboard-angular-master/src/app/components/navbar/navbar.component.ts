@@ -46,7 +46,10 @@ export class NavbarComponent implements OnInit {
     if (titlee.includes("players")) {
       return 'Player Details';
     }
-    
+
+    if(titlee.includes("venues/add")){
+      return 'Venue Form';
+    }
     return 'Dashboard';
   }
 
@@ -62,6 +65,10 @@ export class NavbarComponent implements OnInit {
 
     if (titlee.includes("matches")) {
       return '/matches';
+    }
+
+    if(titlee.includes("venues/add")){
+      return '/venues/add';
     }
     
     if (titlee.includes("venues")) {

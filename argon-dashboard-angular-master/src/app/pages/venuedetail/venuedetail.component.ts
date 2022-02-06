@@ -51,6 +51,10 @@ export class VenuedetailComponent implements OnInit {
   venueDetails!: venue_details;
   id!: any;
 
+  // BOOls
+  pieData = false;
+  lineData = false;
+
   //Pie chart
 
   public piechartOptions: PieChartOptions = {
@@ -142,12 +146,23 @@ export class VenuedetailComponent implements OnInit {
         this.venueDetails = data;
 
         // Pie Chart Data
-        
-        this.piechartOptions.series = [this.venueDetails.matches_won_bat, this.venueDetails.matches_won_bowl, this.venueDetails.matches_draw];
+        if(this.venueDetails.matches_won_bat != 0 || this.venueDetails.matches_won_bowl != 0 || this.venueDetails.matches_draw != 0) {
+          this.pieData = true;
+          this.piechartOptions.series = [this.venueDetails.matches_won_bat, this.venueDetails.matches_won_bowl, this.venueDetails.matches_draw];
+        }
+        else{
+          this.pieData = false;
+        }
 
         // Line Chart Data
-        this.chartOptions.xaxis.categories = this.venueDetails.avg_first_innings_score.map(x => x.season_year.toString());
-        this.chartOptions.series[0].data = this.venueDetails.avg_first_innings_score.map(x => x.score);
+        if(this.venueDetails.avg_first_innings_score.length != 0) {
+          this.lineData = true;
+          this.chartOptions.xaxis.categories = this.venueDetails.avg_first_innings_score.map(x => x.season_year.toString());
+          this.chartOptions.series[0].data = this.venueDetails.avg_first_innings_score.map(x => x.score);
+        }
+        else{
+          this.lineData = false;
+        }
 
       });
     });

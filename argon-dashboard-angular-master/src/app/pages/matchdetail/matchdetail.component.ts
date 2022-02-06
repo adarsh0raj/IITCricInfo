@@ -201,33 +201,6 @@ export class MatchdetailComponent implements OnInit {
     this.getMatchDetails();
   }
 
-  scorecard() {
-    document.getElementById("score-modal").style.display = "block";
-    document.getElementById("chart-modal").style.display="none";
-    document.getElementById("summary-modal").style.display = "none";
-    document.getElementById("card-btn").classList.add("active");
-    document.getElementById("chart-btn").classList.remove("active");
-    document.getElementById("summary-btn").classList.remove("active");
-  }
-
-  scorecomp(){
-    document.getElementById("score-modal").style.display = "none";
-    document.getElementById("chart-modal").style.display="block";
-    document.getElementById("summary-modal").style.display = "none";
-    document.getElementById("card-btn").classList.remove("active");
-    document.getElementById("chart-btn").classList.add("active");
-    document.getElementById("summary-btn").classList.remove("active");
-  }
-
-  summary() {
-    document.getElementById("score-modal").style.display = "none";
-    document.getElementById("chart-modal").style.display="none";
-    document.getElementById("summary-modal").style.display = "block";
-    document.getElementById("card-btn").classList.remove("active");
-    document.getElementById("chart-btn").classList.remove("active");
-    document.getElementById("summary-btn").classList.add("active");
-  }
-
   getMatchDetails() {
     this.activatedRoute.paramMap.subscribe(params => {
       console.log(params);

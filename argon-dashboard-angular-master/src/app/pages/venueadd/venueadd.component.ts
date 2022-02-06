@@ -2,21 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { venue_without_id } from 'src/app/interfaces/venue';
 
-import { FormControl, FormGroup } from '@angular/forms';
-
 @Component({
   selector: 'app-venueadd',
   templateUrl: './venueadd.component.html',
   styleUrls: ['./venueadd.component.scss']
 })
 export class VenueaddComponent implements OnInit {
-
-  venueForm = new FormGroup({
-    venue_name: new FormControl(''),
-    city_name: new FormControl(''),
-    country_name: new FormControl(''),
-    capacity: new FormControl(),
-  });
 
   SERVER_URL = "http://localhost:3000/venues/add";
 
@@ -26,8 +17,19 @@ export class VenueaddComponent implements OnInit {
 
   }
 
-  onSubmit() {
-    console.log(this.venueForm.value);
+  onSubmit(item: any) {
+
+    console.log(item.value);
+    this.http.post<venue_without_id>(this.SERVER_URL, item.value).subscribe(
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
+    item.resetForm();
   }
 
 }

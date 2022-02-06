@@ -10,24 +10,25 @@
 
         <!-- Card stats -->
         <div class="row" style="margin-top: 1rem;">
-            <div class="col-xl-3 col-lg-6 active" id="card-btn" (click)="scorecard()">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Score Card</h5>
-                      <span class="h6 font-weight-bold mb-0">Summary</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                        <i class="fas fa-chart-bar"></i>
-                      </div>
+          <div class="col-xl-3 col-lg-6 active" id="card-btn">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">Score Card</h5>
+                    <span class="h6 font-weight-bold mb-0">Summary</span>
+                  </div>
+                  <div class="col-auto">
+                    <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                      <i class="fas fa-chart-bar"></i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-xl-3 col-lg-6" id="chart-btn" (click)="scorecomp()">
+          </div>
+            
+              <div class="col-xl-3 col-lg-6" id="chart-btn">
                 <div class="card card-stats mb-4 mb-xl-0">
                   <div class="card-body">
                     <div class="row">
@@ -44,7 +45,9 @@
                   </div>
                 </div>
               </div>
-              <div class="col-xl-3 col-lg-6" id="summary-btn" (click)="summary()">
+            
+            
+              <div class="col-xl-3 col-lg-6" id="summary-btn">
                 <div class="card card-stats mb-4 mb-xl-0">
                   <div class="card-body">
                     <div class="row">
@@ -61,43 +64,14 @@
                   </div>
                 </div>
               </div>
+            
           </div>
       </div>
     </div>
 </div>
 <!-- Main content -->
 
-<div id="chart-modal" style="display: none">
-  <div class="container-fluid mt--7" style="margin-top:-5rem !important;">
-    <!-- Table -->
-    <div class="row">
-      <div class="col">
-        <div class="card shadow">
-          <div class="card-header border-0">
-            <h3 class="mb-4">Score Comparison (Runs Vs Overs)</h3>
-          </div>
-          <div id="chart" style="margin-left: 80px;">
-            <apx-chart
-              [series]="chartOptions.series"
-              [chart]="chartOptions.chart"
-              [xaxis]="chartOptions.xaxis"
-              [stroke]="chartOptions.stroke"
-              [colors]="chartOptions.colors"
-              [dataLabels]="chartOptions.dataLabels"
-              [legend]="chartOptions.legend"
-              [markers]="chartOptions.markers"
-              [grid]="chartOptions.grid"
-              [yaxis]="chartOptions.yaxis"
-              [title]="chartOptions.title"
-            ></apx-chart>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="score-modal" style="display: block;">
+<div id="score">
   <div class="container-fluid mt--7" style="margin-top:-5rem !important;">
     <!-- Table -->
     <div class="row">
@@ -348,8 +322,37 @@
 </div>
 </div>
 
-<div id="summary-modal" style="display: none;">
-  <div class="container-fluid mt--7" style="margin-top:-5rem !important;">
+<div id="chart">
+      <div class="container-fluid mt--7" style="margin-top: 2rem !important;">
+        <div class="row" style="margin-top:2.5rem;">
+          <div class="col">
+            <div class="card shadow">
+              <div class="card-header border-0">
+                <h3 class="mb-4">Score Comparison (Runs Vs Overs)</h3>
+              </div>
+              <div id="chart" style="margin-left: 80px;">
+                <apx-chart
+                  [series]="chartOptions.series"
+                  [chart]="chartOptions.chart"
+                  [xaxis]="chartOptions.xaxis"
+                  [stroke]="chartOptions.stroke"
+                  [colors]="chartOptions.colors"
+                  [dataLabels]="chartOptions.dataLabels"
+                  [legend]="chartOptions.legend"
+                  [markers]="chartOptions.markers"
+                  [grid]="chartOptions.grid"
+                  [yaxis]="chartOptions.yaxis"
+                  [title]="chartOptions.title"
+                ></apx-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+<div id="summary">
+  <div class="container-fluid mt--7" style="margin-top: 2rem !important;">
     <div class="row">
       <div class="col">
         <div class="card shadow">
@@ -444,18 +447,6 @@
             </div>
           
           </div>  
-          
-          <!-- <div class="col-6">
-            <div id="pie-chart" class="pie-chart1">
-              
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div id="pie-chart" class="pie-chart2">
-              
-            </div>
-          </div> -->
     
         </div>
       </div>
