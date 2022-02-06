@@ -336,6 +336,73 @@
           <div class="card-header border-0">
             <h3 class="mb-0">Match Summary</h3>
           </div>
+
+          <div id="innings1_summary" class="Team_score">
+            <div class="row">
+              <div class="summary_header">
+                <div class="team_name_toss">
+                  <span><h4>{{match.innings1_progress[0].team_name}}</h4><small *ngIf="match.match_info_without_11[0].toss_name=='bat'">TOSS</small></span>
+                </div> 
+                <div class="overs">
+                  <h6>{{match.innings1_progress.length}}</h6>
+                </div>
+                <div class="score">
+                  <h4>{{match.innings1_score_extras[0].total}}-{{match.innings1_score_extras[0].wickets}}</h4>
+                </div>
+              </div>
+
+              <div class="col">
+                <div>
+                  <table style="float:left">
+                    <tr *ngFor="let i of [1, 2, 3]">
+                      <td> <div *ngIf="i <= match.innings1_batting_summary.length"><a routerLink="/players/{{match.innings1_batting_summary[i-1].player_id}}" routerLinkActive="active">{{match.innings1_batting_summary[i-1].player_name}}</a></div> </td>
+                      <td> <div *ngIf="i <= match.innings1_batting_summary.length">{{match.innings1_batting_summary[i-1].runs}}({{match.innings1_batting_summary[i-1].balls}})</div> </td>
+                    </tr>
+                  </table>
+                  <table style="float:left">
+                    <tr *ngFor="let i of [1, 2, 3]">
+                      <td> <div *ngIf="i <= match.innings1_bowler_summary.length"><a routerLink="/players/{{match.innings1_bowler_summary[i-1].player_id}}" routerLinkActive="active">{{match.innings1_bowler_summary[i-1].bowler}}</a></div> </td>
+                      <td> <div *ngIf="i <= match.innings1_bowler_summary.length">{{match.innings1_bowler_summary[i-1].runs}}-{{match.innings1_bowler_summary[i-1].wickets}}</div> </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+              
+          </div>
+          <div id="innings2_summary" class="Team_score">
+            <div class="row">
+              <div class="summary_header">
+                <div class="team_name_toss">
+                  <span><h4>{{match.innings2_progress[0].team_name}}</h4><small *ngIf="match.match_info_without_11[0].toss_name=='field'">TOSS</small></span>
+                </div> 
+                <div class="overs">
+                  <h6>{{match.innings2_progress.length}}</h6>
+                </div>
+                <div class="score">
+                  <h4>{{match.innings2_score_extras[0].total}}-{{match.innings2_score_extras[0].wickets}}</h4>
+                </div>
+              </div>
+
+              <div class="col">
+                <div>
+                  <table style="float:left">
+                    <tr *ngFor="let i of [1, 2, 3]">
+                      <td> <div *ngIf="i <= match.innings2_batting_summary.length"><a routerLink="/players/{{match.innings2_batting_summary[i-1].player_id}}" routerLinkActive="active">{{match.innings2_batting_summary[i-1].player_name}}</a></div> </td>
+                      <td> <div *ngIf="i <= match.innings2_batting_summary.length">{{match.innings2_batting_summary[i-1].runs}}({{match.innings2_batting_summary[i-1].balls}})</div> </td>
+                    </tr>
+                  </table>
+                  <table style="float:left">
+                    <tr *ngFor="let i of [1, 2, 3]">
+                      <td> <div *ngIf="i <= match.innings2_bowler_summary.length"><a routerLink="/players/{{match.innings2_bowler_summary[i-1].player_id}}" routerLinkActive="active">{{match.innings2_bowler_summary[i-1].bowler}}</a></div> </td>
+                      <td> <div *ngIf="i <= match.innings2_bowler_summary.length">{{match.innings2_bowler_summary[i-1].runs}}-{{match.innings2_bowler_summary[i-1].wickets}}</div> </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+              
+          </div>
           
           <div id="pie-chart" class="pie-chart1">
                 <apx-chart
