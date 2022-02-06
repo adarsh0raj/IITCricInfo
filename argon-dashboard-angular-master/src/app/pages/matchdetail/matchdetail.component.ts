@@ -38,6 +38,7 @@ export type PieChartOptions = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
+  legend: ApexLegend;
   title: ApexTitleSubtitle;
   labels: any;
 };
@@ -76,7 +77,7 @@ export class MatchdetailComponent implements OnInit {
     chart: {
       height: 400,
       type: "line",
-      width: "100%",
+      width: "90%",
       dropShadow: {
         enabled: true,
         color: "#000",
@@ -107,11 +108,8 @@ export class MatchdetailComponent implements OnInit {
         opacity: 0.5
       }
     },
-    // markers: {
-    //   size: 1
-    // },
     markers: {
-      size: 0.5,
+      size:0.1,
       discrete: []
     },
     xaxis: {
@@ -130,8 +128,8 @@ export class MatchdetailComponent implements OnInit {
       position: "top",
       horizontalAlign: "right",
       floating: true,
-      offsetY: -25,
-      offsetX: -5
+      offsetY: -30,
+      offsetX: -10
     }
   };
 
@@ -144,11 +142,14 @@ export class MatchdetailComponent implements OnInit {
     },
     labels: ["Ones", "Twos", "Threes", "Fours", "Sixes", "Extra"],
     title: {
-      text: "Pie Chart for Innings 1",
+      text: "Innings 1",
+    },
+    legend : {
+      position: 'bottom',
     },
     responsive: [
       {
-          breakpoint: 480,
+          breakpoint: 300,
           options: {
             chart: {
               width: 200
@@ -170,11 +171,14 @@ export class MatchdetailComponent implements OnInit {
     },
     labels: ["Ones", "Twos", "Threes", "Fours", "Sixes", "Extra"],
     title: {
-      text: "Pie Chart for Innings 2",
+      text: "Innings 2",
+    },
+    legend : {
+      position: 'bottom',
     },
     responsive: [
       {
-          breakpoint: 480,
+          breakpoint: 300,
           options: {
             chart: {
               width: 200
@@ -240,14 +244,20 @@ export class MatchdetailComponent implements OnInit {
         this.chartOptions.series[1].data = this.match.innings2_progress.map(innings => innings.runs);
 
         for(let i=0; i<this.match.innings1_progress.length; i++){
-          if(this.match.innings1_progress[i].wickets == 1){
+          if(this.match.innings1_progress[i].wickets >= 1){
             this.chartOptions.markers.discrete.push({seriesIndex: 0, dataPointIndex: i, size:7, fillColor: "#0000ff", strokeColor: '#fff' ,  shape  : "circle"});
+          }
+          else {
+            this.chartOptions.markers.discrete.push({seriesIndex: 0, dataPointIndex: i, size:0, fillColor: "#ff0000", strokeColor: '#fff', shape  : "circle"});
           }
         }
 
         for(let i=0; i<this.match.innings2_progress.length; i++){
-          if(this.match.innings2_progress[i].wickets == 1){
+          if(this.match.innings2_progress[i].wickets >= 1){
             this.chartOptions.markers.discrete.push({seriesIndex: 1, dataPointIndex: i, size:7, fillColor: "#ff0000", strokeColor: '#fff', shape  : "circle"});
+          }
+          else {
+            this.chartOptions.markers.discrete.push({seriesIndex: 1, dataPointIndex: i, size:0, fillColor: "#ff0000", strokeColor: '#fff', shape  : "circle"});
           }
         }
 

@@ -1,11 +1,15 @@
-#chart {
-    margin: 35px auto;
-}
+// #chart {
+//     margin: 35px auto;
+// }
 
 #pie-chart {
-    max-width: 380px;
     margin: 35px auto;
-    padding: 0;
+
+    apx-chart {
+        width: 100%;
+        height: 100%;
+        margin: 20px auto;
+    }
 }
 
 .active{
@@ -20,5 +24,16 @@
     cursor: pointer;
 }
 
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    margin-left: 100px;
+}
+
+.grid-child {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
 
   
