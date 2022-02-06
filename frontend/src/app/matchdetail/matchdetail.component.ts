@@ -69,6 +69,7 @@ export class MatchdetailComponent implements OnInit {
     ],
     chart: {
       height: 350,
+      width: '100%',
       type: "line",
       dropShadow: {
         enabled: true,

@@ -76,6 +76,7 @@ export class MatchdetailComponent implements OnInit {
     chart: {
       height: 400,
       type: "line",
+      width: "100%",
       dropShadow: {
         enabled: true,
         color: "#000",
@@ -106,8 +107,12 @@ export class MatchdetailComponent implements OnInit {
         opacity: 0.5
       }
     },
+    // markers: {
+    //   size: 1
+    // },
     markers: {
-      size: 1
+      size: 0.5,
+      discrete: []
     },
     xaxis: {
       categories: [],
@@ -233,6 +238,18 @@ export class MatchdetailComponent implements OnInit {
         this.chartOptions.xaxis.categories = this.match.innings1_progress.map(innings => innings.over_id);
         this.chartOptions.series[0].data = this.match.innings1_progress.map(innings => innings.runs);
         this.chartOptions.series[1].data = this.match.innings2_progress.map(innings => innings.runs);
+
+        for(let i=0; i<this.match.innings1_progress.length; i++){
+          if(this.match.innings1_progress[i].wickets == 1){
+            this.chartOptions.markers.discrete.push({seriesIndex: 0, dataPointIndex: i, size:7, fillColor: "#0000ff", strokeColor: '#fff' ,  shape  : "circle"});
+          }
+        }
+
+        for(let i=0; i<this.match.innings2_progress.length; i++){
+          if(this.match.innings2_progress[i].wickets == 1){
+            this.chartOptions.markers.discrete.push({seriesIndex: 1, dataPointIndex: i, size:7, fillColor: "#ff0000", strokeColor: '#fff', shape  : "circle"});
+          }
+        }
 
         //Pie Chart Data
         var temp1 = [this.match.pie_chart_innings1[0].ones, this.match.pie_chart_innings1[0].twos, this.match.pie_chart_innings1[0].threes, this.match.pie_chart_innings1[0].fours, this.match.pie_chart_innings1[0].sixes, this.match.pie_chart_innings1[0].extras];
