@@ -50,4 +50,29 @@ export class NavbarComponent implements OnInit {
     return 'Dashboard';
   }
 
+  getPath(){
+    var titlee = this.location.prepareExternalUrl(this.location.path());
+    if(titlee.charAt(0) === '#'){
+        titlee = titlee.slice( 1 );
+    }
+
+    if (titlee.includes("pointstable")){
+      return '/pointstable';
+    }
+
+    if (titlee.includes("matches")) {
+      return '/matches';
+    }
+    
+    if (titlee.includes("venues")) {
+      return '/venues';
+    }
+
+    if (titlee.includes("players")) {
+      return '/players';
+    }
+
+    return '/home';
+  }
+
 }
