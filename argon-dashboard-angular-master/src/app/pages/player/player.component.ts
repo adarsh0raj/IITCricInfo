@@ -150,10 +150,8 @@ export class PlayerComponent implements OnInit {
             return '#FF0000';
           } else if (runs.runs <= 50 && runs.runs >= 30 ) {
             return '#00FF00';
-          } else if (runs.runs >= 20 && runs.runs < 30) {
+          } else if (runs.runs < 30) {
             return '#0000FF';
-          } else if (runs.runs < 20) {
-            return '#FFFF00';
           } else {
             return '#000000';
           }
