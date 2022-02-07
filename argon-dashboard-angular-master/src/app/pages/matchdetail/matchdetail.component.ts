@@ -41,7 +41,7 @@ export type PieChartOptions = {
   legend: ApexLegend;
   title: ApexTitleSubtitle;
   labels: any;
-  // colors: string[];
+  colors: string[];
 };
 
 export type players_11 = {
@@ -148,6 +148,7 @@ export class MatchdetailComponent implements OnInit {
     legend : {
       position: 'bottom',
     },
+    colors: ["#0000ff", "#00ff00", "#ffff00", "#ff0000", "#ff00ff", "#993366"],
     responsive: [
       {
           breakpoint: 300,
@@ -178,6 +179,7 @@ export class MatchdetailComponent implements OnInit {
     legend : {
       position: 'bottom',
     },
+    colors: ["#0000ff", "#00ff00", "#ffff00", "#ff0000", "#ff00ff", "#993366"],
     responsive: [
       {
           breakpoint: 300,
