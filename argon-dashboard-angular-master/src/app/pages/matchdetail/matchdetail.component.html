@@ -13,10 +13,11 @@
           <div class="col-xl-3 col-lg-6 active" id="card-btn">
             <div class="card card-stats mb-4 mb-xl-0">
               <div class="card-body">
+                <a href="/matches/{{match.full_info.match_id}}/#score">
                 <div class="row">
                   <div class="col">
-                    <h5 class="card-title text-uppercase text-muted mb-0">Score Card</h5>
-                    <span class="h6 font-weight-bold mb-0">Summary</span>
+                      <h5 class="card-title text-uppercase text-muted mb-0">Score Card</h5>
+                      <span class="h6 font-weight-bold mb-0">Summary</span>
                   </div>
                   <div class="col-auto">
                     <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
@@ -24,6 +25,7 @@
                     </div>
                   </div>
                 </div>
+                </a>
               </div>
             </div>
           </div>
@@ -31,6 +33,7 @@
               <div class="col-xl-3 col-lg-6" id="chart-btn">
                 <div class="card card-stats mb-4 mb-xl-0">
                   <div class="card-body">
+                    <a href="/matches/{{match.full_info.match_id}}/#chart">
                     <div class="row">
                       <div class="col">
                         <h5 class="card-title text-uppercase text-muted mb-0">Score Comparison</h5>
@@ -42,6 +45,7 @@
                         </div>
                       </div>
                     </div>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -50,6 +54,7 @@
               <div class="col-xl-3 col-lg-6" id="summary-btn">
                 <div class="card card-stats mb-4 mb-xl-0">
                   <div class="card-body">
+                    <a href="/matches/{{match.full_info.match_id}}/#summary">
                     <div class="row">
                       <div class="col">
                         <h5 class="card-title text-uppercase text-muted mb-0">Match Summary</h5>
@@ -61,6 +66,7 @@
                         </div>
                       </div>
                     </div>
+                    </a>
                   </div>
                 </div>
               </div>
