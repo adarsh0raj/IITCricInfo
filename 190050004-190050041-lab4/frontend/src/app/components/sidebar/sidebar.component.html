@@ -1,0 +1,27 @@
+<nav class="navbar navbar-vertical navbar-expand-md navbar-light bg-white" id="sidenav-main">
+  <div class="container-fluid">
+    <!-- Brand -->
+    <a class="navbar-brand pt-0" routerLinkActive="active" [routerLink]="['/home']" style="height: 160px !important;">
+      <img src="./assets/img/brand/logo2.png"  alt="..." style="width:225px; height: 150px; max-height:150px !important;">
+    </a>
+    <!-- Collapse -->
+    <div class="collapse navbar-collapse"  [ngbCollapse]="isCollapsed" id="sidenav-collapse-main">
+      
+      <!-- Navigation -->
+      <ul class="navbar-nav">
+          <li *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
+              <a routerLinkActive="active" [routerLink]="[menuItem.path]" class="nav-link" id="{{menuItem.class}}">
+                  <i class="ni {{menuItem.icon}}"></i>
+                  {{menuItem.title}}
+              </a>
+          </li>
+          <li class="nav-item">
+            <a routerLinkActive="active" routerLink="/venues/add" class="nav-link">
+              <i class="ni ni-single-copy-04 text-green"></i>
+              Add Venue
+            </a>
+          </li>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,40 @@
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body">
+      </div>
+    </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7" style="margin-top:-10rem !important;">
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <h3 class="mb-0">IPL Venues Statistics</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Venue Name</th>
+                            <th scope="col">City Name</th>
+                            <th scope="col">Country Name</th>
+                            <th scope="col">Capacity</th>
+                            <th scope="col">Matches Played</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let venue of venues">
+                            <th scope="row"><a [routerLink]="['/venues', venue.venue_id]">{{venue.venue_name}}</a></th>
+                            <td>{{venue.city_name}}</td>
+                            <td>{{venue.country_name}}</td>
+                            <td>{{venue.capacity}}</td>
+                            <td>{{venue.matches_played}}</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

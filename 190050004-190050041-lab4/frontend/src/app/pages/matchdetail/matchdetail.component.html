@@ -1,0 +1,463 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body">
+        <h2>
+          <span class="text-white">{{match.innings1_progress[0].team_name}} Vs {{match.innings2_progress[0].team_name}} ({{match.full_info.season_year}})</span>
+        </h2>
+        <h4>
+            <span class="text-white"> {{match.full_info.winner}} Won By {{match.full_info.win_margin}} {{match.full_info.win_type}}</span>
+        </h4>
+
+        <!-- Card stats -->
+        <div class="row" style="margin-top: 1rem;">
+          <div class="col-xl-3 col-lg-6 active" id="card-btn">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <!-- <a href="/matches/{{match.full_info.match_id}}/#score"> -->
+                <div class="row">
+                  <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Score Card</h5>
+                      <span class="h6 font-weight-bold mb-0">Summary</span>
+                  </div>
+                  <div class="col-auto">
+                    <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                      <i class="fas fa-chart-bar"></i>
+                    </div>
+                  </div>
+                </div>
+                <!-- </a> -->
+              </div>
+            </div>
+          </div>
+            
+              <div class="col-xl-3 col-lg-6" id="chart-btn">
+                <div class="card card-stats mb-4 mb-xl-0">
+                  <div class="card-body">
+                    <!-- <a href="/matches/{{match.full_info.match_id}}/#chart"> -->
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Score Comparison</h5>
+                        <span class="h6 font-weight-bold mb-0">Over By Over Chart</span>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                          <i class="fas fa-chart-bar"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- </a> -->
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="col-xl-3 col-lg-6" id="summary-btn">
+                <div class="card card-stats mb-4 mb-xl-0">
+                  <div class="card-body">
+                    <!-- <a href="/matches/{{match.full_info.match_id}}/#summary"> -->
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Match Summary</h5>
+                        <span class="h6 font-weight-bold mb-0">Overall</span>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                          <i class="fas fa-chart-bar"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- </a> -->
+                  </div>
+                </div>
+              </div>
+            
+          </div>
+      </div>
+    </div>
+</div>
+<!-- Main content -->
+
+<div id="score">
+  <div class="container-fluid mt--7" style="margin-top:-5rem !important;">
+    <!-- Table -->
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">First Inning: {{match.innings1_progress[0].team_name}} Batting First</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                    <th scope="col">Batter</th>
+                    <th scope="col">Runs</th>
+                    <th scope="col">Fours</th>
+                    <th scope="col">Sixes</th>
+                    <th scope="col">Balls Faced</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let batter of match.innings1_batting">
+                    <th scope="row">
+                        <a routerLink="/players/{{batter.player_id}}" routerLinkActive="active">{{batter.player_name}}</a>
+                    </th>
+                    <td>{{batter.runs}}</td>
+                    <td>{{batter.fours}}</td>
+                    <td>{{batter.sixes}}</td>
+                    <td>{{batter.balls}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 1rem;">
+        <div class="col">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-auto">
+                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                </div>
+                <div class="col">
+                    <h4>Total Runs Scored: {{match.innings1_score_extras[0].total}}</h4>
+                    <h5>Extra Runs: {{match.innings1_score_extras[0].extras}}</h5>
+                    <h5>Wickets: {{match.innings1_score_extras[0].wickets}}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row"  style="margin-top: 1rem;">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <h3 class="mb-0">First Inning: {{match.innings2_progress[0].team_name}} Bowling First</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Bowler</th>
+                    <th scope="col">Balls Bowled</th>
+                    <th scope="col">Runs Given</th>
+                    <th scope="col">Wickets Taken</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let b of match.innings1_bowling">
+                        <th scope="row">
+                            <a routerLink="/players/{{b.player_id}}" routerLinkActive="active">{{b.bowler}}</a>
+                        </th>
+                        <td>{{b.balls}}</td>
+                        <td>{{b.runs}}</td>
+                        <td>{{b.wickets}}</td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="container-fluid mt--7" style="margin-top: 2rem !important;">
+    <!-- Table -->
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Second Inning: {{match.innings2_progress[0].team_name}} Batting</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                    <th scope="col">Batter</th>
+                    <th scope="col">Runs</th>
+                    <th scope="col">Fours</th>
+                    <th scope="col">Sixes</th>
+                    <th scope="col">Balls Faced</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let batter of match.innings2_batting">
+                    <th scope="row">
+                        <a routerLink="/players/{{batter.player_id}}" routerLinkActive="active">{{batter.player_name}}</a>
+                    </th>
+                    <td>{{batter.runs}}</td>
+                    <td>{{batter.fours}}</td>
+                    <td>{{batter.sixes}}</td>
+                    <td>{{batter.balls}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 1rem;">
+        <div class="col">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-auto">
+                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                </div>
+                <div class="col">
+                    <h4>Total Runs Scored: {{match.innings2_score_extras[0].total}}</h4>
+                    <h5>Extra Runs: {{match.innings2_score_extras[0].extras}}</h5>
+                    <h5>Wickets: {{match.innings2_score_extras[0].wickets}}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row"  style="margin-top: 1rem;">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <h3 class="mb-0">Second Inning: {{match.innings1_progress[0].team_name}} Bowling</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Bowler</th>
+                    <th scope="col">Balls Bowled</th>
+                    <th scope="col">Runs Given</th>
+                    <th scope="col">Wickets Taken</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let b of match.innings2_bowling">
+                        <th scope="row">
+                            <a routerLink="/players/{{b.player_id}}" routerLinkActive="active">{{b.bowler}}</a>
+                        </th>
+                        <td>{{b.balls}}</td>
+                        <td>{{b.runs}}</td>
+                        <td>{{b.wickets}}</td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" style="margin-top: 2rem !important;">
+  <div class="row" style="margin-top: 1rem;">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h2 class="mb-0">Match Information</h2>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <tbody>
+              <tr>
+                <th scope="row">Match Id</th>
+                <td>{{match.full_info.match_id}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Teams</th>
+                <td>{{match.innings1_progress[0].team_name}} Vs {{match.innings2_progress[0].team_name}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Season Year</th>
+                <td>{{match.full_info.season_year}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Toss Details</th>
+                <td>{{match.match_info_without_11[0].toss_winner}} Won and Chose to {{match.match_info_without_11[0].toss_name}} First</td>
+              </tr>
+              <tr>
+                <th scope="row">Venue</th>
+                <td>{{match.full_info.stadium_name}}, {{match.full_info.city_name}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Umpire Name</th>
+                <td>{{match.match_info_without_11[0].umpire_name}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row" style="margin-top: 2rem !important;">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-0">Playing 11</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">{{match.innings1_progress[0].team_name}}</th>
+                <th scope="col">{{match.innings2_progress[0].team_name}}</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of playing_11">
+                    <td>{{p.team1_player}}</td>
+                    <td>{{p.team2_player}}</td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="chart">
+      <div class="container-fluid mt--7" style="margin-top: 2rem !important;">
+        <div class="row" style="margin-top:2.5rem;">
+          <div class="col">
+            <div class="card shadow">
+              <div class="card-header border-0">
+                <h3 class="mb-4">Score Comparison (Runs Vs Overs)</h3>
+              </div>
+              <div id="chart" style="margin-left: 80px;">
+                <apx-chart
+                  [series]="chartOptions.series"
+                  [chart]="chartOptions.chart"
+                  [xaxis]="chartOptions.xaxis"
+                  [stroke]="chartOptions.stroke"
+                  [colors]="chartOptions.colors"
+                  [dataLabels]="chartOptions.dataLabels"
+                  [legend]="chartOptions.legend"
+                  [markers]="chartOptions.markers"
+                  [grid]="chartOptions.grid"
+                  [yaxis]="chartOptions.yaxis"
+                  [title]="chartOptions.title"
+                ></apx-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+<div id="summary">
+  <div class="container-fluid mt--7" style="margin-top: 2rem !important;">
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h2 class="mb-0">Match Summary</h2>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead>
+                <tr>
+                  <th scope="row" style="font-size: 1.5rem; width: 500px;">{{match.innings1_progress[0].team_name}}</th>
+                  <th scope="row" style="width: 150px; font-size: 1.2rem;"><div *ngIf="match.innings1_progress[0].team_name == match.match_info_without_11[0].toss_winner">TOSS</div></th>
+                  <th scope="row" style="font-size: 1.25rem; width: 450px;">{{match.innings1_progress.length}} OVERS</th>
+                  <th scope="row" style="font-size: 1.5rem; width: 150px;">{{match.innings1_score_extras[0].total}}-{{match.innings1_score_extras[0].wickets}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let i of [1, 2, 3]">
+                  <td style="font-size: 1.15rem;"> <div *ngIf="i <= match.innings1_batting_summary.length"><a routerLink="/players/{{match.innings1_batting_summary[i-1].player_id}}" routerLinkActive="active">{{match.innings1_batting_summary[i-1].player_name}}</a></div> </td>
+                  <td style="font-size: 1.2rem;"> <div *ngIf="i <= match.innings1_batting_summary.length">{{match.innings1_batting_summary[i-1].runs}} ({{match.innings1_batting_summary[i-1].balls}}) </div></td>
+                  <td style="font-size: 1.15rem;"> <div *ngIf="i <= match.innings1_bowler_summary.length"><a routerLink="/players/{{match.innings1_bowler_summary[i-1].player_id}}" routerLinkActive="active">{{match.innings1_bowler_summary[i-1].bowler}}</a></div> </td>
+                  <td style="font-size: 1.2rem;"> <div *ngIf="i <= match.innings1_bowler_summary.length">{{match.innings1_bowler_summary[i-1].wickets}}-{{match.innings1_bowler_summary[i-1].runs}}</div> </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-responsive" style="margin-top: 1rem;">
+            <table class="table align-items-center table-flush">
+              <thead>
+                <tr>
+                  <th scope="row" style="font-size: 1.5rem; width: 500px;">{{match.innings2_progress[0].team_name}}</th>
+                  <th scope="row" style="width: 150px; font-size: 1.2rem;"><div *ngIf="match.innings2_progress[0].team_name == match.match_info_without_11[0].toss_winner">TOSS</div></th>
+                  <th scope="row" style="font-size: 1.25rem; width: 450px;">{{match.innings2_progress.length}} OVERS</th>
+                  <th scope="row" style="font-size: 1.5rem; width: 150px;">{{match.innings2_score_extras[0].total}}-{{match.innings2_score_extras[0].wickets}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let i of [1, 2, 3]">
+                  <td style="font-size: 1.15rem;"> <div *ngIf="i <= match.innings2_batting_summary.length"><a routerLink="/players/{{match.innings2_batting_summary[i-1].player_id}}" routerLinkActive="active">{{match.innings2_batting_summary[i-1].player_name}}</a></div> </td>
+                  <td style="font-size: 1.2rem;"> <div *ngIf="i <= match.innings2_batting_summary.length">{{match.innings2_batting_summary[i-1].runs}} ({{match.innings2_batting_summary[i-1].balls}}) </div></td>
+                  <td style="font-size: 1.15rem;"> <div *ngIf="i <= match.innings2_bowler_summary.length"><a routerLink="/players/{{match.innings2_bowler_summary[i-1].player_id}}" routerLinkActive="active">{{match.innings2_bowler_summary[i-1].bowler}}</a></div> </td>
+                  <td style="font-size: 1.2rem;"> <div *ngIf="i <= match.innings2_bowler_summary.length">{{match.innings2_bowler_summary[i-1].wickets}}-{{match.innings2_bowler_summary[i-1].runs}}</div> </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-responsive"  style="margin-top: 1rem;">
+            <table class="table table-flush align-items-center">
+              <thead>
+                <tr>
+                  <th scope="row" style="font-size: 1.5rem;">  {{match.full_info.winner}} Won By {{match.full_info.win_margin}} {{match.full_info.win_type}}</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:2.5rem;">
+      <div class="col-12">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h2 class="mb-0">Percentage Of Runs Scored</h2>
+          </div>
+
+          <hr class="mb-0" style="margin-top: 1rem; margin-bottom: 1.25rem;">
+          <div class="grid-container">
+
+            <div class="grid-child">
+              <apx-chart
+                [series]="piechartOptions.series"
+                [chart]="piechartOptions.chart"
+                [labels]="piechartOptions.labels"
+                [title]="piechartOptions.title"
+                [legend]="piechartOptions.legend"
+                [colors]="piechartOptions.colors"
+                [responsive]="piechartOptions.responsive"
+              ></apx-chart>
+            </div>
+        
+            <div class="grid-child">
+              <apx-chart
+                [series]="piechartOptions2.series"
+                [chart]="piechartOptions2.chart"
+                [labels]="piechartOptions2.labels"
+                [title]="piechartOptions2.title"
+                [legend]="piechartOptions2.legend"
+                [colors]="piechartOptions2.colors"
+                [responsive]="piechartOptions2.responsive"
+              ></apx-chart>
+            </div>
+          
+          </div>  
+    
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

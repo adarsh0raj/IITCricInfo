@@ -1,0 +1,44 @@
+<div class="header bg-gradient-success pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body">
+        <!-- Card stats -->
+      </div>
+    </div>
+</div>
+  <!-- Page content -->
+<div class="container-fluid mt--7" style="margin-top: -12rem !important;">
+    <!-- Dark table -->
+    <div class="row mt-5">
+      <div class="col">
+        <div class="card bg-default shadow">
+          <div class="card-header bg-transparent border-0">
+            <h3 class="text-white mb-0">Points Table for Season Year: {{year}}</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-dark table-flush">
+              <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Team Name</th>
+                    <th scope="col">Matches Won</th>
+                    <th scope="col">Matches Lost</th>
+                    <th scope="col">Matches Tied</th>
+                    <th scope="col">Points</th>
+                    <th scope="col">NRR</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let point of pointsTable">
+                    <th scope="row">{{point.team_name}}</th>
+                    <td>{{point.won}}</td>
+                    <td>{{point.lost}}</td>
+                    <td>{{point.tied}}</td>
+                    <td>{{point.points}}</td>
+                    <td>{{point.nrr}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
